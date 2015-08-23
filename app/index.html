@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr" data-ng-app="podcastApp" data-ng-controller="pageCtrl">
+	<head>
+		<meta charset="utf-8">
+		<title>{{pageTitle.title(pageTitleDefault)}}{{podcastTitle}}</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width">
+		<link href="dist/css/style.css" rel="stylesheet" type="text/css">
+		<script src="dist/js/main.js"></script>
+	</head>
+	<body>
+		<sound-manager></sound-manager>
+		<div id="container">
+			<div id="top">
+				<form ng-submit="checkFeed()"><input type="text" placeholder="RSS Feed" ng-model="inputRssFeed"> <input type="submit" value="Load RSS"></form>
+				http://daringfireball.net/thetalkshow/rss<br>http://atp.fm/episodes?format=rss
+				<div class="checkedInfo">
+					<div class="checkedTitle">{{checkedFeed.title}}</div>
+					<div class="checkedAuthor">{{checkedFeed.author}}</div>
+				</div>
+				<li ng-repeat="podcastItem in podcastsList"><span ng-show="podcastItem.current">{{currentPodcastText}}</span> <a href="#" ng-click="playFeed(podcastItem.url);">{{podcastItem.title}}</a> <button class="remove-podcast" ng-click="removeFeedFromList(podcastItem.url)">X</button></li>
+			</div>
+			<div ng-show="!feed">no podcast loaded</div>
+			<header ng-show="feed">
+				<h1>Podcast reader</h1>
+				<div id="player-container">
+					<div ng-show="currentPlaying.url.length">
+						<button play-pause-toggle data-play="Play!" data-pause="Pause!">Play Toggle</button> <button stop-music>Stop</button>
+						<div class="seekBase" seek-track>
+							<div class="seekLoad" ng-style="{width : ( progress + '%' ) }"></div>
+						</div>
+						{{ currentPlaying.title }} by {{ currentPlaying.artist }} - {{ currentPostion }} / {{ currentDuration }}
+					</div>
+					<div class="playlist">
+						<button clear-playlist>Clear Playlist</button>
+						<ul>
+							<li ng-repeat="song in playlist"><a play-from-playlist="song">{{song.title}}</a> - <a remove-from-playlist="song" data-index="{{$index}}"><small>(remove)</small></a> <span ng-if="currentPlaying.id == song.id">- (current)</span></li>
+						</ul>
+					</div>
+					<div class="volume">
+						<button music-volume data-type="increase">+</button> <button music-volume data-type="decrease">-</button> <button mute-music>Mute ({{ mute }})</button> volume: {{volume}}<br><br>
+						<div volume-bar style="height: 10px; background: gray" ng-class="{'active': mute}">
+							<div style="background:red; height: 10px" ng-style="{width : ( volume-bar + '%' ) }"></div>
+						</div>
+						<br><br>volumebar: {{volume-bar}}
+					</div>
+				</div>
+			</header>
+			<section ng-controller="contentCtrl" ng-show="feed">
+				<img ng-src="{{podcastImg}}" alt="" id="logo" ng-show="podcastImg.length">
+				<div id="title">
+					<h2><a href="#/{{feed.slug}}">{{podcastTitle}}</a></h2>
+					<div class="sub">{{feed.description}}</div>
+					<div class="sub sub-author">{{feed.author}}</div>
+				</div>
+				<input type="text" id="podcast-search" ng-model="keyword" placeholder="Search"> <a class="clear-search" ng-show="keyword.length" href="" ng-click="clearSearch()">×</a>
+				<div id="search-results" ng-show="keyword.length">
+					<h3>Search Results: {{filteredList.length}}</h3>
+					<p class="no-results" ng-show="!filteredList.length">No results. <a href="" ng-click="clearSearch()">Reset search</a></p>
+					<ul>
+						<li ng-repeat="l in (filteredList = (feedSearch.item | filter:keyword))">
+							<a href="#/{{l.id}}/{{l.route}}" ng-click="clearSearchToTop()" class="title" ng-bind-html="l.title | highlight:keyword"></a>
+							<p class="sub" ng-show="l.subtitle.length" ng-bind-html="l.subtitle | highlight:keyword"></p>
+							<p class="date"><span ng-bind-html="l.date | date:'dd/MM/yyyy' | highlight:keyword"></span> <span ng-show="l.duration.length" ng-bind-html="' - ' + l.duration | highlight:keyword"></span></p>
+							<p class="description" ng-bind-html="l.description | highlight:keyword"></p>
+							<p class="keywords" ng-show="l.keywords.length">Keywords: <span ng-bind-html="l.keywords | highlight:keyword"></span></p>
+						</li>
+					</ul>
+				</div>
+				<div id="details" ng-view ng-show="!keyword.length"></div>
+			</section>
+			<ul id="list" ng-show="feed">
+				<li ng-repeat="pod in feed.item">
+					<a href="#/{{feed.slug}}/{{pod.id}}/{{pod.route}}" ng-class="{active: isActive(pod.id)}">
+						{{pod.title}}
+						<div class="date">{{pod.date | date:'dd/MM/yyyy'}}</div>
+					</a>
+					<button music-player add-song="pod">+</button> <button music-player="play" add-song="pod">p</button>
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "podcast-webapp",
+  "version": "0.0.5",
+  "description": "Web Podcast player based on Angular",
+  "scripts": {
+    "postinstall": "bower install",
+    "prestart": "grunt prod",
+    "start": "http-server -a 0.0.0.0 -p 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jibeetz/podcast-webapp.git"
+  },
+  "keywords": [
+    "angular",
+    "podcast"
+  ],
+  "author": "JB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jibeetz/podcast-webapp/issues"
+  },
+  "homepage": "https://github.com/jibeetz/podcast-webapp#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.1",
+    "grunt-contrib-cssmin": "^0.13.0",
+    "grunt-contrib-htmlmin": "^0.4.0",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-less": "^1.0.1",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-html": "^5.0.0",
+    "grunt-lesslint": "^1.1.15",
+    "http-server": "~0.8.0"
+  },
+  "dependencies": {
+    "bower": "^1.5.1"
+  }
+}
