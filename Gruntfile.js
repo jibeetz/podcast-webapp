@@ -99,7 +99,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('start', ['concat', 'less']);
+  grunt.registerTask('start', ['concat', 'less', 'copy']);
   grunt.registerTask('dev', ['jshint', 'concat', 'less', 'watch']);
   grunt.registerTask('prod', ['htmlmin:prod', 'jshint', 'concat', 'uglify:prod', 'less', 'cssmin', 'copy']);
 
