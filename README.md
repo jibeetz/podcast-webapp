@@ -1,6 +1,7 @@
 # podcast-webapp
-Web Podcast player based on Angular
+Web Podcast player
 
 ## TODO
-- refactor pageCtrl
+- Check Install process
+- Refactor pageCtrl
 - UI

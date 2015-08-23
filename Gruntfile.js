@@ -45,7 +45,7 @@ module.exports = function(grunt) {
     },
     concat: {
       options: {
-        separator: ';',
+        separator: grunt.util.linefeed + ';' + grunt.util.linefeed
       },
       all: {
         files: options.jsFiles
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
     },
     watch: {
       scripts: {
-        files: ['app/src/**/*'],
+        files: ['app/**/*', '!**/dist/**'],
         tasks: ['jshint', 'concat', 'less']
       }
     }

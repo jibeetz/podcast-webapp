@@ -4,7 +4,6 @@
   "description": "Web Podcast player based on Angular",
   "scripts": {
     "postinstall": "bower install",
-    "prestart": "grunt prod",
     "start": "http-server -a 0.0.0.0 -p 8000"
   },
   "repository": {
