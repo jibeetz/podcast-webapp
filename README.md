@@ -1,6 +1,12 @@
 # podcast-webapp
 Web Podcast player
 
+# Prerequisites
+
+* node.js
+* bower
+* grunt
+
 ## Installation
 
 * npm install
