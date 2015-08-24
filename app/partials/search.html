@@ -1,4 +1,5 @@
-<input type="text" id="podcast-search" ng-model="keyword" placeholder="Search"> <a class="clear-search" ng-show="keyword.length" href="" ng-click="clearSearch()">×</a>
+<input type="text" id="podcast-search" ng-model="$parent.keyword" placeholder="Search">
+<a class="clear-search" ng-show="keyword.length" href="" ng-click="clearSearch()">×</a>
 <div id="search-results" ng-show="keyword.length">
 	<h3>Search Results: {{filteredList.length}}</h3>
 	<p class="no-results" ng-show="!filteredList.length">No results. <a href="" ng-click="clearSearch()">Reset search</a></p>

@@ -39,9 +39,10 @@ module.exports = function(grunt) {
     },
     // This is where we configure JSHint
     jshint: {
-      // You get to make the name
-      // The paths tell JSHint which files to validate
-      files: options.jsFiles
+      all: [
+           'Gruntfile.js',
+           'app/src/js/app/*.js'
+           ]
     },
     concat: {
       options: {
@@ -62,9 +63,6 @@ module.exports = function(grunt) {
               'app/dist/css/style.css' : 'app/src/css/style.less'
           }
       }
-    },
-    lesslint: {
-        src: ['app/src/css/style.less']
     },
     cssmin: {
         all: {
