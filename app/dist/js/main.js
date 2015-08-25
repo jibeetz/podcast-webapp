@@ -5627,78 +5627,29 @@ podcastControllers.controller('podcastCtrl', ['$scope', '$routeParams', 'getUniq
 	});
 }]);
 
-podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', '$timeout', 'pageTitle', 'rssService', 'angularPlayer', 'search', function ($scope, $location, $routeParams, $timeout, pageTitle, rssService, angularPlayer, search){
+podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', '$timeout', 'pageTitle', 'rssService', 'feedService', 'searchFeedService', 'angularPlayer', 'search', function ($scope, $location, $routeParams, $timeout, pageTitle, rssService, feedService, searchFeedService, angularPlayer, search){
+
+	$scope.pageTitleDefault = 'Podcast Player';
+	$scope.pageTitle = pageTitle;
+	$scope.podcastTitle = $scope.pageTitleDefault;
+	$scope.imgDefault = 'img/icon320x320.png';
+	$scope.isLocalStorage = localStorageTest();
+	$scope.currentPodcastText = 'current';
+	$scope.keyword = search.str;
 
 	$scope.isActive = function (id) {
 		return id == $routeParams.id;
 	};
 
-	$scope.pageTitleDefault = 'Podcast Player';
-	$scope.pageTitle = pageTitle;
-	$scope.podcastTitle = $scope.pageTitleDefault;
-	// $scope.rssFeed = 'http://atp.fm/episodes?format=rss';
-	$scope.imgDefault = 'img/icon320x320.png';
-	$scope.isLocalStorage = localStorageTest();
-	$scope.currentPodcastText = 'current';
-
-	$scope.keyword = search.str;
-
-	var fieldsToDeleteSearch = ['encoded', 'link', 'guid', 'enclosure', 'url', 'id', 'idc', 'thumbnail', 'explicit', 'pubDate', 'artist', 'author'];
-
 	var getData = function(data){
 		return rssService.getRssFeed(data).then(function(res){
-			$scope.feed = res.data.query.results.rss.channel;
+
+			$scope.feed = feedService.getFeed(res.data.query.results.rss.channel, data, $scope.imgDefault);
+
 			$scope.podcastTitle = $scope.feed.title;
-			$scope.feed.url = data;
 
-			$scope.feed.slug = slug($scope.feed.title);
-
-			// console.log($scope.feed);
-
-			if($scope.feed.image.length >= 1){
-				for (var i = 0; i < $scope.feed.image.length; i++)
-					if($scope.feed.image[i].href)
-						$scope.podcastImg = $scope.feed.image[i].href;
-
-				if(!$scope.podcastImg)
-					$scope.podcastImg = $scope.imgDefault;
-
-			}else if($scope.feed.image.href){
-					$scope.podcastImg = $scope.feed.image.href;
-			}else{
-				$scope.podcastImg = $scope.imgDefault;
-			}
-
-			angular.forEach($scope.feed.item, function(item, i){
-
-				$scope.feed.item[i].artist = $scope.feed.title;
-				$scope.feed.item[i].id = 'id-' + i;
-				$scope.feed.item[i].date = Date.parse($scope.feed.item[i].pubDate);
-
-				$scope.feed.item[i].url = $scope.feed.item[i].enclosure.url;
-				var podRouteTemp = $scope.feed.item[i].url.split('/'),
-					podRoute = podRouteTemp.slice(-1)[0];
-				$scope.feed.item[i].route = podRoute.split('.')[0];
-				$scope.feed.item[i].idc = $scope.feed.item[i].route + '-' + new Date($scope.feed.item[i].pubDate).getTime();
-				if($scope.feed.item[i].encoded)
-					$scope.feed.item[i].description = $scope.feed.item[i].encoded;
-			});
-
-			$scope.feedSearch = angular.copy($scope.feed);
-			angular.forEach($scope.feedSearch.item, function(item, i){
-
-				if(item.description)
-					$scope.feedSearch.item[i].description = item.description.replace(/<a[^>]*>(.*?)<\/a>/g, "$1");
-
-				for (var j = 0; j < fieldsToDeleteSearch.length - 1; j++) {
-					var itemToDelete = fieldsToDeleteSearch[j];
-					if($scope.feedSearch.item[i][itemToDelete])
-						delete $scope.feedSearch.item[i][itemToDelete];
-				}
-			});
-			// console.log($scope.feedSearch.item);
-
-			return res;
+			var searchFeed = angular.copy($scope.feed);
+			$scope.searchFeed = searchFeedService.getSearchFeed(searchFeed);
 		});
 	};
 
@@ -5884,19 +5835,79 @@ podcastApp.filter('highlight', function($sce) {
 // });
 
 ;
-podcastApp.factory('pageTitle', function(){
-	var title = '';
-	return {
-		title: function() {return title;},
-		setTitle: function(newTitle) {title = newTitle;}
-	};
-});
-
-podcastApp.factory('rssService', ['$http', '$q', function($http, $q){
+podcastApp.factory('rssService', ['$http', function($http){
 
 	return {
 		getRssFeed: function(url) {
 			return $http.get('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%3D"' + url + '"&format=json');
+		}
+	};
+}]);
+
+podcastApp.factory('feedService', [function(){
+
+	return {
+		getFeed: function(feedData, url, imgDefault) {
+			var feed = feedData;
+				feed.url = url;
+				feed.slug = slug(feed.title);
+
+				if(feed.image.length >= 1){
+					for (var i = 0; i < feed.image.length; i++)
+						if(feed.image[i].href)
+							feed.podcastImg = feed.image[i].href;
+
+					if(!feed.podcastImg)
+						feed.podcastImg = imgDefault;
+
+				}else if(feed.image.href){
+						feed.podcastImg = feed.image.href;
+				}else{
+					feed.podcastImg = imgDefault;
+				}
+
+				angular.forEach(feed.item, function(item, i){
+
+					feed.item[i].artist = feed.title;
+					feed.item[i].id = 'id-' + i;
+					feed.item[i].date = Date.parse(feed.item[i].pubDate);
+
+					feed.item[i].url = feed.item[i].enclosure.url;
+					var podRouteTemp = feed.item[i].url.split('/'),
+						podRoute = podRouteTemp.slice(-1)[0];
+					feed.item[i].route = podRoute.split('.')[0];
+					feed.item[i].idc = feed.item[i].route + '-' + new Date(feed.item[i].pubDate).getTime();
+					if(feed.item[i].encoded)
+						feed.item[i].description = feed.item[i].encoded;
+				});
+
+			return feed;
+		}
+	};
+}]);
+
+podcastApp.factory('searchFeedService', [function(){
+
+	var fieldsToDeleteSearch = ['encoded', 'link', 'guid', 'enclosure', 'url', 'idc', 'thumbnail', 'explicit', 'pubDate', 'artist', 'author'];
+
+	return {
+		getSearchFeed: function(feedData) {
+
+			var searchFeed = feedData;
+
+			angular.forEach(searchFeed.item, function(item, i){
+
+				if(item.description)
+					searchFeed.item[i].description = item.description.replace(/<a[^>]*>(.*?)<\/a>/g, "$1");
+
+				for (var j = 0; j < fieldsToDeleteSearch.length - 1; j++) {
+					var itemToDelete = fieldsToDeleteSearch[j];
+					if(searchFeed.item[i][itemToDelete])
+						delete searchFeed.item[i][itemToDelete];
+				}
+			});
+
+			return searchFeed;
 		}
 	};
 }]);
@@ -5919,6 +5930,14 @@ podcastApp.factory('getUniqueService', [function(){
 		}
 	};
 }]);
+
+podcastApp.factory('pageTitle', function(){
+	var title = '';
+	return {
+		title: function() {return title;},
+		setTitle: function(newTitle) {title = newTitle;}
+	};
+});
 
 podcastApp.service('search', function(){
 	var _keyword = {};
