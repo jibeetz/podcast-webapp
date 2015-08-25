@@ -33,3 +33,8 @@ podcastApp.factory('getUniqueService', [function(){
 		}
 	};
 }]);
+
+podcastApp.service('search', function(){
+	var _keyword = {};
+	this.str = _keyword;
+});

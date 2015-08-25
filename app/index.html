@@ -17,12 +17,12 @@
 
 			<ng-include src="'partials/player.html'"></ng-include>
 
-			<section ng-controller="contentCtrl" ng-show="feed">
+			<section ng-show="feed">
 				<ng-include src="'partials/details.html'"></ng-include>
 
-				<ng-include src="'partials/search.html'"></ng-include>
+				<ng-include src="'partials/search.html'" ng-controller="searchCtrl"></ng-include>
 
-				<div id="details" ng-view ng-show="!keyword.length"></div>
+				<div id="details" ng-view ng-show="!keyword.str.length"></div>
 			</section>
 
 			<ng-include src="'partials/list.html'"></ng-include>

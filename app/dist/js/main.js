@@ -5577,9 +5577,6 @@ var podcastApp = angular.module('podcastApp', ['ngSanitize', 'ngRoute', 'podcast
 
 podcastApp.config(['$routeProvider', function ($routeProvider){
 	$routeProvider.
-	when('/', {
-		controller: 'homeCtrl'
-	}).
 	when('/:slug/:id/:url', {
 		templateUrl: 'partials/podcast.html',
 		controller: 'podcastCtrl'
@@ -5592,21 +5589,22 @@ podcastApp.config(['$routeProvider', function ($routeProvider){
 		redirectTo: '/'
 	});
 }]);
-
 ;
 
 var podcastControllers = angular.module('podcastControllers', []);
 
-podcastControllers.controller('contentCtrl', ['$scope', '$anchorScroll', function ($scope, $anchorScroll){
+podcastControllers.controller('searchCtrl', ['$scope', '$anchorScroll', 'search', function ($scope, $anchorScroll, search){
 
 	$scope.clearSearch = function(){
-		$scope.keyword = '';
+		$scope.keyword.str = '';
 	};
 
 	$scope.clearSearchToTop = function(){
-		$scope.keyword = '';
+		$scope.keyword.str = '';
 		$anchorScroll();
 	};
+
+	$scope.keyword = search.str;
 }]);
 
 podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueService', 'pageTitle', function ($scope, getUniqueService, pageTitle){
@@ -5629,7 +5627,7 @@ podcastControllers.controller('podcastCtrl', ['$scope', '$routeParams', 'getUniq
 	});
 }]);
 
-podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', '$timeout', 'pageTitle', 'rssService', 'angularPlayer', function ($scope, $location, $routeParams, $timeout, pageTitle, rssService, angularPlayer){
+podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', '$timeout', 'pageTitle', 'rssService', 'angularPlayer', 'search', function ($scope, $location, $routeParams, $timeout, pageTitle, rssService, angularPlayer, search){
 
 	$scope.isActive = function (id) {
 		return id == $routeParams.id;
@@ -5642,6 +5640,8 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 	$scope.imgDefault = 'img/icon320x320.png';
 	$scope.isLocalStorage = localStorageTest();
 	$scope.currentPodcastText = 'current';
+
+	$scope.keyword = search.str;
 
 	var fieldsToDeleteSearch = ['encoded', 'link', 'guid', 'enclosure', 'url', 'id', 'idc', 'thumbnail', 'explicit', 'pubDate', 'artist', 'author'];
 
@@ -5704,8 +5704,6 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 
 	var retrievePodcastsFromLocalStorage = function (){
 		$scope.podcastsList = [];
-
-		// console.log(localStorage['feeds']);
 
 		if(!$scope.isLocalStorage || !localStorage.feeds || localStorage.feeds === undefined || localStorage.feeds === 'undefined')
 			return;
@@ -5921,3 +5919,8 @@ podcastApp.factory('getUniqueService', [function(){
 		}
 	};
 }]);
+
+podcastApp.service('search', function(){
+	var _keyword = {};
+	this.str = _keyword;
+});
