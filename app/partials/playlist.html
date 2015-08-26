@@ -1,0 +1,7 @@
+<li ng-repeat="podcastItem in podcastsList">
+	<span ng-show="podcastItem.current">{{currentPodcastText}}</span>
+	<a href="#" ng-click="playFeed(podcastItem.url);">{{podcastItem.title}}</a>
+	<button class="remove-podcast" ng-click="removeFeedFromList(podcastItem.url)">X</button>
+</li>
+
+{{podcastsList}}

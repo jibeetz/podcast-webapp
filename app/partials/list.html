@@ -1,4 +1,4 @@
-<ul id="list" ng-show="feed">
+<ul id="list">
 	<li ng-repeat="pod in feed.item">
 		<a href="#/{{feed.slug}}/{{pod.id}}/{{pod.route}}" ng-class="{active: isActive(pod.id)}">
 			{{pod.title}}

@@ -1,7 +1,7 @@
 
 var podcastControllers = angular.module('podcastControllers', []);
 
-podcastControllers.controller('searchCtrl', ['$scope', '$anchorScroll', 'search', function ($scope, $anchorScroll, search){
+podcastControllers.controller('searchCtrl', ['$scope', '$anchorScroll', 'search', 'searchFeedService', function ($scope, $anchorScroll, search, searchFeedService){
 
 	$scope.clearSearch = function(){
 		$scope.keyword.str = '';
@@ -13,6 +13,18 @@ podcastControllers.controller('searchCtrl', ['$scope', '$anchorScroll', 'search'
 	};
 
 	$scope.keyword = search.str;
+
+	$scope.$watch('feed', function() {
+		if($scope.feed){
+			var searchFeed = angular.copy($scope.feed);
+			$scope.searchFeed = searchFeedService.getSearchFeed(searchFeed);
+		}
+	});
+}]);
+
+podcastControllers.controller('playlistCtrl', ['$scope', 'podcastsPlaylist', function ($scope, podcastsPlaylist){
+
+	$scope.podcastsList = podcastsPlaylist.get();
 }]);
 
 podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueService', 'pageTitle', function ($scope, getUniqueService, pageTitle){
@@ -35,13 +47,12 @@ podcastControllers.controller('podcastCtrl', ['$scope', '$routeParams', 'getUniq
 	});
 }]);
 
-podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', '$timeout', 'pageTitle', 'rssService', 'feedService', 'searchFeedService', 'angularPlayer', 'search', function ($scope, $location, $routeParams, $timeout, pageTitle, rssService, feedService, searchFeedService, angularPlayer, search){
+podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', '$timeout', 'pageTitle', 'rssService', 'feedService', 'angularPlayer', 'search', 'podcastsPlaylist', function ($scope, $location, $routeParams, $timeout, pageTitle, rssService, feedService, angularPlayer, search, podcastsPlaylist){
 
 	$scope.pageTitleDefault = 'Podcast Player';
 	$scope.pageTitle = pageTitle;
 	$scope.podcastTitle = $scope.pageTitleDefault;
 	$scope.imgDefault = 'img/icon320x320.png';
-	$scope.isLocalStorage = localStorageTest();
 	$scope.currentPodcastText = 'current';
 	$scope.keyword = search.str;
 
@@ -49,54 +60,13 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 		return id == $routeParams.id;
 	};
 
-	var getData = function(data){
-		return rssService.getRssFeed(data).then(function(res){
+	var getData = function(url){
+		return rssService.getRssFeed(url).then(function(res){
 
-			$scope.feed = feedService.getFeed(res.data.query.results.rss.channel, data, $scope.imgDefault);
+			$scope.feed = feedService.getFeed(res.data.query.results.rss.channel, url, $scope.imgDefault);
 
 			$scope.podcastTitle = $scope.feed.title;
-
-			var searchFeed = angular.copy($scope.feed);
-			$scope.searchFeed = searchFeedService.getSearchFeed(searchFeed);
 		});
-	};
-
-	var retrievePodcastsFromLocalStorage = function (){
-		$scope.podcastsList = [];
-
-		if(!$scope.isLocalStorage || !localStorage.feeds || localStorage.feeds === undefined || localStorage.feeds === 'undefined')
-			return;
-
-		$scope.podcastsList = JSON.parse(localStorage.feeds);
-	};
-	retrievePodcastsFromLocalStorage();
-
-	var saveToPodcastsList = function(data){
-
-		if(!$scope.isLocalStorage)
-			return;
-
-		var isPodcastIn = false;
-		angular.forEach($scope.podcastsList, function(item, i){
-			if(item.url == data.url)
-				isPodcastIn = true;
-		});
-
-		if(isPodcastIn)
-			return;
-
-		$scope.podcastsList.push(data);
-
-		localStorage.setItem('feeds', angular.toJson($scope.podcastsList));
-	};
-
-	var updateCurrent = function(url){
-
-		angular.forEach($scope.podcastsList, function(item, i){
-			item.current = (item.url == $scope.feed.url) ? true : false;
-		});
-
-		localStorage.setItem('feeds', angular.toJson($scope.podcastsList));
 	};
 
 	$scope.checkFeed = function(){
@@ -129,7 +99,7 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 
 			$timeout(function() {
 				savePlayFeed($scope.inputRssFeed);
-			}, 1000);
+			}, 500);
 		});
 	};
 
@@ -143,7 +113,7 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 
 		getData(url).then(function(res){
 			$location.url('/' +  $scope.feed.slug);
-			updateCurrent(url);
+			podcastsPlaylist.setCurrent($scope.feed.url);
 		});
 	};
 
@@ -164,19 +134,16 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 		}
 
 		getData(url).then(function(res){
-			saveToPodcastsList($scope.checkedFeed);
-			updateCurrent(url);
+			podcastsPlaylist.set($scope.checkedFeed);
+			podcastsPlaylist.setCurrent($scope.feed.url);
 			resetChecked();
 			$location.url('/' +  $scope.feed.slug);
 		});
 	};
 
 	$scope.removeFeedFromList = function(url){
-		$scope.podcastsList = $scope.podcastsList.filter(function(obj){
-			return obj.url !== url;
-		});
 
-		localStorage.setItem('feeds', angular.toJson($scope.podcastsList));
+		podcastsPlaylist.removePodcast(url);
 
 		if($scope.feed && $scope.feed.url == url){
 			if(confirm('Are you sure you want to remove the podcast ?')){
@@ -195,6 +162,8 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 		}
 	};
 
+	$scope.podcastsList = podcastsPlaylist.get();
+
 	var loadCurrentPodcastOnLoad = function(){
 		if(!$scope.podcastsList)
 			return;
@@ -204,8 +173,6 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 			if(item.current === true)
 				currentPodcastOnLoad = item;
 		});
-
-		// TODO Add location blank if no current
 
 		if(!currentPodcastOnLoad){
 			$location.url('/');

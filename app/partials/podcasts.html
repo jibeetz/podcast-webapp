@@ -1,9 +1,0 @@
-<div id="top">
-	<form ng-submit="checkFeed()"><input type="text" placeholder="RSS Feed" ng-model="inputRssFeed"> <input type="submit" value="Load RSS"></form>
-	http://daringfireball.net/thetalkshow/rss<br>http://atp.fm/episodes?format=rss
-	<div class="checkedInfo">
-		<div class="checkedTitle">{{checkedFeed.title}}</div>
-		<div class="checkedAuthor">{{checkedFeed.author}}</div>
-	</div>
-	<li ng-repeat="podcastItem in podcastsList"><span ng-show="podcastItem.current">{{currentPodcastText}}</span> <a href="#" ng-click="playFeed(podcastItem.url);">{{podcastItem.title}}</a> <button class="remove-podcast" ng-click="removeFeedFromList(podcastItem.url)">X</button></li>
-</div>

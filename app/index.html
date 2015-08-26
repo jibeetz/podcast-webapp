@@ -11,12 +11,15 @@
 	<body>
 		<sound-manager></sound-manager>
 		<div id="container">
-			<ng-include src="'partials/podcasts.html'"></ng-include>
+			<div id="top">
+				<ng-include src="'partials/input.html'"></ng-include>
+				<ng-include src="'partials/playlist.html'" ng-controller="playlistCtrl"></ng-include>
+			</div>
 
 			<div ng-show="!feed">no podcast loaded</div>
 
 			<ng-include src="'partials/player.html'"></ng-include>
-
+{{podcastsList}}
 			<section ng-show="feed">
 				<ng-include src="'partials/details.html'"></ng-include>
 
@@ -25,7 +28,7 @@
 				<div id="details" ng-view ng-show="!keyword.str.length"></div>
 			</section>
 
-			<ng-include src="'partials/list.html'"></ng-include>
+			<ng-include src="'partials/list.html'" ng-show="feed"></ng-include>
 		</div>
 	</body>
 </html>
