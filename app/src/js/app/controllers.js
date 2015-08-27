@@ -14,112 +14,36 @@ podcastControllers.controller('searchCtrl', ['$scope', '$anchorScroll', 'search'
 
 	$scope.keyword = search.str;
 
-	$scope.$watch('feed', function() {
-		if($scope.feed){
-			var searchFeed = angular.copy($scope.feed);
+	$scope.$watch('feed.q', function() {
+		if($scope.feed.q){
+			var searchFeed = angular.copy($scope.feed.q);
 			$scope.searchFeed = searchFeedService.getSearchFeed(searchFeed);
 		}
 	});
 }]);
 
-podcastControllers.controller('playlistCtrl', ['$scope', 'podcastsPlaylist', function ($scope, podcastsPlaylist){
+podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', function ($scope, $timeout, $location, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle){
 
-	$scope.podcastsList = podcastsPlaylist.get();
-}]);
-
-podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueService', 'pageTitle', function ($scope, getUniqueService, pageTitle){
-
-	$scope.$watch('feed', function() {
-		if($scope.feed){
-			$scope.podcast = getUniqueService.getItem($scope.feed.item, 'latest');
-			pageTitle.setTitle('');
-		}
-	});
-}]);
-
-podcastControllers.controller('podcastCtrl', ['$scope', '$routeParams', 'getUniqueService', 'pageTitle', function ($scope, $routeParams, getUniqueService, pageTitle){
-
-	$scope.$watch('feed', function() {
-		if($scope.feed){
-			$scope.podcast = getUniqueService.getItem($scope.feed.item, $routeParams.id);
-			pageTitle.setTitle($scope.podcast.title  + ' - ');
-		}
-	});
-}]);
-
-podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', '$timeout', 'pageTitle', 'rssService', 'feedService', 'angularPlayer', 'search', 'podcastsPlaylist', function ($scope, $location, $routeParams, $timeout, pageTitle, rssService, feedService, angularPlayer, search, podcastsPlaylist){
-
-	$scope.pageTitleDefault = 'Podcast Player';
-	$scope.pageTitle = pageTitle;
-	$scope.podcastTitle = $scope.pageTitleDefault;
-	$scope.imgDefault = 'img/icon320x320.png';
-	$scope.currentPodcastText = 'current';
-	$scope.keyword = search.str;
-
-	$scope.isActive = function (id) {
-		return id == $routeParams.id;
-	};
-
-	var getData = function(url){
-		return rssService.getRssFeed(url).then(function(res){
-
-			$scope.feed = feedService.getFeed(res.data.query.results.rss.channel, url, $scope.imgDefault);
-
-			$scope.podcastTitle = $scope.feed.title;
-		});
-	};
+	$scope.feed = getFeedService.get();
+	$scope.inputRssFeed = {};
 
 	$scope.checkFeed = function(){
 
-		if(!$scope.inputRssFeed)
+		if(!$scope.inputRssFeed.url)
 			return;
 
-		rssService.getRssFeed($scope.inputRssFeed).then(function(res){
-
-			if(res.status != 200)
-				return;
-
-			var channel = res.data.query.results.rss.channel;
-
-			if(channel.item.length === 0)
-				return;
-
-			var channelSrc = 0;
-			for (var i = 0; i < channel.item.length; i++) {
-				if(channel.item[i].enclosure.url)
-					channelSrc += 1;
-			}
-			if(channelSrc === 0)
-				return;
-
-			var feedTitle = channel.title,
-				feedAuthor = channel.author;
-
-			$scope.checkedFeed = {title: feedTitle, author: feedAuthor, url: $scope.inputRssFeed};
+		rssService.getRssFeed($scope.inputRssFeed.url).then(function(res){
+			$scope.checkedFeed = checkFeedService.check(res, $scope.inputRssFeed.url);
 
 			$timeout(function() {
-				savePlayFeed($scope.inputRssFeed);
+				savePlayFeed($scope.inputRssFeed.url);
 			}, 500);
-		});
-	};
-
-	$scope.playFeed = function(url){
-
-		if(!url)
-			return;
-
-		if($scope.feed && $scope.feed.url == url)
-			return;
-
-		getData(url).then(function(res){
-			$location.url('/' +  $scope.feed.slug);
-			podcastsPlaylist.setCurrent($scope.feed.url);
 		});
 	};
 
 	var resetChecked = function(){
 		$scope.checkedFeed = [];
-		$scope.inputRssFeed = '';
+		$scope.inputRssFeed.url = '';
 	};
 
 	var savePlayFeed = function(url){
@@ -127,17 +51,41 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 		if(!$scope.checkedFeed)
 			return;
 
-		if($scope.feed && $scope.feed.url == url){
+		if($scope.feed.length === 0 && $scope.feed.q.url == url){
 			resetChecked();
 			$location.url('/');
 			return;
 		}
 
-		getData(url).then(function(res){
+		getFeedService.set(url).then(function(data){
 			podcastsPlaylist.set($scope.checkedFeed);
-			podcastsPlaylist.setCurrent($scope.feed.url);
+			podcastsPlaylist.setCurrent($scope.feed.q.url);
 			resetChecked();
-			$location.url('/' +  $scope.feed.slug);
+			$location.url('/' +  $scope.feed.q.slug);
+
+		});
+	};
+
+}]);
+
+podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer){
+
+	$scope.currentPodcastText = 'current';
+	$scope.podcastsList = podcastsPlaylist.get();
+	$scope.feed = getFeedService.get();
+	$scope.podcastsList = podcastsPlaylist.get();
+
+	$scope.playFeed = function(url){
+
+		if(!url)
+			return;
+
+		if($scope.feed.q && $scope.feed.q.url == url)
+			return;
+
+		getFeedService.set(url).then(function(res){
+			$location.url('/' +  $scope.feed.q.slug);
+			podcastsPlaylist.setCurrent($scope.feed.q.url);
 		});
 	};
 
@@ -145,10 +93,11 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 
 		podcastsPlaylist.removePodcast(url);
 
-		if($scope.feed && $scope.feed.url == url){
+		if($scope.feed.q && $scope.feed.q.url == url){
 			if(confirm('Are you sure you want to remove the podcast ?')){
-				delete $scope.feed;
-				$scope.podcastTitle = $scope.pageTitleDefault;
+				delete $scope.feed.q;
+				pageTitle.setPodcastTitle($scope.pageTitleDefault);
+				pageTitle.setShowTitle('');
 
 				if($scope.currentPlaying){
 					$timeout(function(){
@@ -161,10 +110,43 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 			}
 		}
 	};
+}]);
 
+podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueShowService', 'pageTitle', function ($scope, getUniqueShowService, pageTitle){
+
+	$scope.$watch('feed.q', function() {
+		if($scope.feed.q){
+			$scope.podcast = getUniqueShowService.getItem($scope.feed.q.item, 'latest');
+			pageTitle.setPodcastTitle($scope.feed.q.title);
+			pageTitle.setShowTitle('');
+		}
+	});
+}]);
+
+podcastControllers.controller('podcastCtrl', ['$scope', '$routeParams', 'getUniqueShowService', 'pageTitle', function ($scope, $routeParams, getUniqueShowService, pageTitle){
+
+	$scope.$watch('feed.q', function() {
+		if($scope.feed.q){
+			$scope.podcast = getUniqueShowService.getItem($scope.feed.q.item, $routeParams.id);
+			pageTitle.setShowTitle($scope.podcast.title  + ' - ');
+		}
+	});
+}]);
+
+podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', 'pageTitle', 'angularPlayer', 'search', 'podcastsPlaylist', 'getFeedService', 'checkCurrentPodcastOnLoad', function ($scope, $location, $routeParams, pageTitle, angularPlayer, search, podcastsPlaylist, getFeedService, checkCurrentPodcastOnLoad){
+
+	$scope.pageTitleDefault = 'Podcast Player';
+	$scope.pageTitle = pageTitle;
+	pageTitle.setPodcastTitle($scope.pageTitleDefault);
+	$scope.keyword = search.str;
 	$scope.podcastsList = podcastsPlaylist.get();
+	$scope.feed = getFeedService.get();
 
-	var loadCurrentPodcastOnLoad = function(){
+	$scope.isActive = function (id) {
+		return id == $routeParams.id;
+	};
+
+	var loadCurrentPodcastOnLoade = function(){
 		if(!$scope.podcastsList)
 			return;
 
@@ -179,10 +161,24 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 			return;
 		}
 
-		getData(currentPodcastOnLoad.url).then(function(res){
+		getFeedService.set(currentPodcastOnLoad.url).then(function(res){
+			pageTitle.setPodcastTitle($scope.feed.q.title);
 			if(!$routeParams.id)
-				$location.url('/' +  $scope.feed.slug);
+				$location.url('/' +  $scope.feed.q.slug);
 		});
 	};
-	loadCurrentPodcastOnLoad();
+	// loadCurrentPodcastOnLoade();
+
+	$scope.CurrentPodcastOnLoadUrl = checkCurrentPodcastOnLoad.get($scope.podcastsList);
+	console.log($scope.CurrentPodcastOnLoadUrl);
+	if($scope.isCurrentPodcastOnLoadUrl === false){
+		console.log('letscheckthebitch');
+		getFeedService.set($scope.CurrentPodcastOnLoadUrl).then(function(res){
+			pageTitle.setPodcastTitle($scope.feed.q.title);
+			if(!$routeParams.id)
+				$location.url('/' +  $scope.feed.q.slug);
+		});
+	}
+
+
 }]);

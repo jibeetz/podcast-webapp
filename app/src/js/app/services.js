@@ -7,10 +7,65 @@ podcastApp.factory('rssService', ['$http', function($http){
 	};
 }]);
 
-podcastApp.factory('feedService', [function(){
+podcastApp.factory('checkFeedService', [function(){
 
 	return {
-		getFeed: function(feedData, url, imgDefault) {
+		check: function(res, urlFeed) {
+
+			if(res.status != 200)
+				return;
+
+			var channel = res.data.query.results.rss.channel;
+
+			if(channel.item.length === 0)
+				return;
+
+			var channelSrc = 0;
+			for (var i = 0; i < channel.item.length; i++) {
+				if(channel.item[i].enclosure.url)
+					channelSrc += 1;
+			}
+			if(channelSrc === 0)
+				return;
+
+			checkedFeed = {title: channel.title, author: channel.author, url: urlFeed};
+
+			return checkedFeed;
+		}
+	};
+}]);
+
+podcastApp.factory('getFeedService', ['rssService', 'prepareFeedService', function(rssService, prepareFeedService){
+
+	var feed = {};
+
+	return {
+		get: function(){
+			return feed;
+		},
+		set: function(url){
+			return rssService.getRssFeed(url).then(function(res){
+				feed.q = res.data.query.results.rss.channel;
+				return prepareFeedService.getFeed(res.data.query.results.rss.channel, url);
+			});
+		}
+	};
+}]);
+
+podcastApp.factory('constants', [function(){
+	return {
+		imgDefault : function(){
+			return 'img/icon320x320.png';
+		}
+	};
+}]);
+
+podcastApp.factory('prepareFeedService', ['constants', function(constants){
+
+	var imgDefault = constants.imgDefault();
+
+	return {
+		getFeed: function(feedData, url) {
 			var feed = feedData;
 				feed.url = url;
 				feed.slug = slug(feed.title);
@@ -75,7 +130,7 @@ podcastApp.factory('searchFeedService', [function(){
 	};
 }]);
 
-podcastApp.factory('getUniqueService', [function(){
+podcastApp.factory('getUniqueShowService', [function(){
 
 	return {
 		getItem: function(data, id) {
@@ -95,10 +150,21 @@ podcastApp.factory('getUniqueService', [function(){
 }]);
 
 podcastApp.factory('pageTitle', function(){
-	var title = '';
+	var showTitle = '';
+	var podcastTitle = '';
 	return {
-		title: function() {return title;},
-		setTitle: function(newTitle) {title = newTitle;}
+		showTitle: function() {
+			return showTitle;
+		},
+		setShowTitle: function(newShowTitle) {
+			showTitle = newShowTitle;
+		},
+		podcastTitle: function(){
+			return podcastTitle;
+		},
+		setPodcastTitle: function(newPodcastTitle){
+			podcastTitle = newPodcastTitle;
+		}
 	};
 });
 
@@ -131,7 +197,6 @@ podcastApp.factory('localStorageHandler', [function(){
 podcastApp.factory('podcastsPlaylist', ['localStorageHandler', function(localStorageHandler){
 
 	var podcastsList = localStorageHandler.getOnLoad();
-
 
 	return {
 		get: function(){
@@ -174,5 +239,22 @@ podcastApp.factory('podcastsPlaylist', ['localStorageHandler', function(localSto
 	};
 }]);
 
+podcastApp.factory('checkCurrentPodcastOnLoad', [function(){
 
+	return {
+		get: function(podcastsList){
+
+			if(!podcastsList)
+				return;
+
+			var currentPodcastOnLoad;
+			angular.forEach(podcastsList, function(item, i){
+				if(item.current === true)
+					currentPodcastOnLoad = item;
+			});
+
+			return (currentPodcastOnLoad) ? currentPodcastOnLoad.url : false;
+		}
+	};
+}]);
 

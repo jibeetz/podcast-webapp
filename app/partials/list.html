@@ -1,6 +1,6 @@
 <ul id="list">
-	<li ng-repeat="pod in feed.item">
-		<a href="#/{{feed.slug}}/{{pod.id}}/{{pod.route}}" ng-class="{active: isActive(pod.id)}">
+	<li ng-repeat="pod in feed.q.item">
+		<a href="#/{{feed.q.slug}}/{{pod.id}}/{{pod.route}}" ng-class="{active: isActive(pod.id)}">
 			{{pod.title}}
 			<div class="date">{{pod.date | date:'dd/MM/yyyy'}}</div>
 		</a>

@@ -2,7 +2,7 @@
 <html lang="fr" data-ng-app="podcastApp" data-ng-controller="pageCtrl">
 	<head>
 		<meta charset="utf-8">
-		<title>{{pageTitle.title(pageTitleDefault)}}{{podcastTitle}}</title>
+		<title>{{pageTitle.showTitle()}}{{pageTitle.podcastTitle()}}</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width">
 		<link href="dist/css/style.css" rel="stylesheet" type="text/css">
@@ -12,15 +12,15 @@
 		<sound-manager></sound-manager>
 		<div id="container">
 			<div id="top">
-				<ng-include src="'partials/input.html'"></ng-include>
+				<ng-include src="'partials/input.html'" ng-controller="feedsCtrl"></ng-include>
 				<ng-include src="'partials/playlist.html'" ng-controller="playlistCtrl"></ng-include>
 			</div>
 
-			<div ng-show="!feed">no podcast loaded</div>
+			<div ng-show="!feed.q">no podcast loaded</div>
 
-			<ng-include src="'partials/player.html'"></ng-include>
-{{podcastsList}}
-			<section ng-show="feed">
+			<ng-include ng-show="feed.q" src="'partials/player.html'"></ng-include>
+
+			<section ng-show="feed.q">
 				<ng-include src="'partials/details.html'"></ng-include>
 
 				<ng-include src="'partials/search.html'" ng-controller="searchCtrl"></ng-include>
@@ -28,7 +28,7 @@
 				<div id="details" ng-view ng-show="!keyword.str.length"></div>
 			</section>
 
-			<ng-include src="'partials/list.html'" ng-show="feed"></ng-include>
+			<ng-include src="'partials/list.html'" ng-show="feed.q"></ng-include>
 		</div>
 	</body>
 </html>
