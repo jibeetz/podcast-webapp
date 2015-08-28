@@ -1,5 +1,7 @@
 var podcastApp = angular.module('podcastApp', ['ngSanitize', 'ngRoute', 'podcastControllers', 'angularSoundManager']);
 
+var podcastControllers = angular.module('podcastControllers', []);
+
 podcastApp.config(['$routeProvider', function ($routeProvider){
 	$routeProvider.
 	when('/:slug/:id/:url', {

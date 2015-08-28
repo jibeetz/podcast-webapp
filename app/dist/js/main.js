@@ -5575,6 +5575,8 @@ $(window).resize(function(){
 ;
 var podcastApp = angular.module('podcastApp', ['ngSanitize', 'ngRoute', 'podcastControllers', 'angularSoundManager']);
 
+var podcastControllers = angular.module('podcastControllers', []);
+
 podcastApp.config(['$routeProvider', function ($routeProvider){
 	$routeProvider.
 	when('/:slug/:id/:url', {
@@ -5590,30 +5592,6 @@ podcastApp.config(['$routeProvider', function ($routeProvider){
 	});
 }]);
 ;
-
-var podcastControllers = angular.module('podcastControllers', []);
-
-podcastControllers.controller('searchCtrl', ['$scope', '$anchorScroll', 'search', 'searchFeedService', function ($scope, $anchorScroll, search, searchFeedService){
-
-	$scope.clearSearch = function(){
-		$scope.keyword.str = '';
-	};
-
-	$scope.clearSearchToTop = function(){
-		$scope.keyword.str = '';
-		$anchorScroll();
-	};
-
-	$scope.keyword = search.str;
-
-	$scope.$watch('feed.q', function() {
-		if($scope.feed.q){
-			var searchFeed = angular.copy($scope.feed.q);
-			$scope.searchFeed = searchFeedService.getSearchFeed(searchFeed);
-		}
-	});
-}]);
-
 podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', function ($scope, $timeout, $location, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle){
 
 	$scope.feed = getFeedService.get();
@@ -5659,7 +5637,57 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 	};
 
 }]);
+;
+podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueShowService', 'pageTitle', function ($scope, getUniqueShowService, pageTitle){
 
+	$scope.$watch('feed.q', function() {
+		if($scope.feed.q){
+			$scope.podcast = getUniqueShowService.getItem($scope.feed.q.item, 'latest');
+			pageTitle.setPodcastTitle($scope.feed.q.title);
+			pageTitle.setShowTitle('');
+		}
+	});
+}]);
+
+podcastControllers.controller('podcastCtrl', ['$scope', '$routeParams', 'getUniqueShowService', 'pageTitle', function ($scope, $routeParams, getUniqueShowService, pageTitle){
+
+	$scope.$watch('feed.q', function() {
+		if($scope.feed.q){
+			$scope.podcast = getUniqueShowService.getItem($scope.feed.q.item, $routeParams.id);
+			pageTitle.setShowTitle($scope.podcast.title  + ' - ');
+		}
+	});
+}]);
+;
+podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', 'pageTitle', 'search', 'podcastsPlaylist', 'getFeedService', 'checkCurrentPodcastOnLoad', function ($scope, $location, $routeParams, pageTitle, search, podcastsPlaylist, getFeedService, checkCurrentPodcastOnLoad){
+
+	$scope.pageTitleDefault = 'Podcast Player';
+	$scope.pageTitle = pageTitle;
+	pageTitle.setPodcastTitle($scope.pageTitleDefault);
+	$scope.keyword = search.str;
+	$scope.podcastsList = podcastsPlaylist.get();
+	$scope.feed = getFeedService.get();
+
+	$scope.isActive = function (id) {
+		return id == $routeParams.id;
+	};
+
+	var getFeed = function(url){
+
+		if(!url)
+			return;
+
+		getFeedService.set(url).then(function(){
+			pageTitle.setPodcastTitle($scope.feed.q.title);
+			if(!$routeParams.id)
+				$location.url('/' +  $scope.feed.q.slug);
+		});
+	};
+
+	checkCurrentPodcastOnLoad.getMessages($scope.podcastsList).then(getFeed);
+
+}]);
+;
 podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer){
 
 	$scope.currentPodcastText = 'current';
@@ -5703,76 +5731,26 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 		}
 	};
 }]);
+;
+podcastControllers.controller('searchCtrl', ['$scope', '$anchorScroll', 'search', 'searchFeedService', function ($scope, $anchorScroll, search, searchFeedService){
 
-podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueShowService', 'pageTitle', function ($scope, getUniqueShowService, pageTitle){
+	$scope.clearSearch = function(){
+		$scope.keyword.str = '';
+	};
 
-	$scope.$watch('feed.q', function() {
-		if($scope.feed.q){
-			$scope.podcast = getUniqueShowService.getItem($scope.feed.q.item, 'latest');
-			pageTitle.setPodcastTitle($scope.feed.q.title);
-			pageTitle.setShowTitle('');
-		}
-	});
-}]);
+	$scope.clearSearchToTop = function(){
+		$scope.keyword.str = '';
+		$anchorScroll();
+	};
 
-podcastControllers.controller('podcastCtrl', ['$scope', '$routeParams', 'getUniqueShowService', 'pageTitle', function ($scope, $routeParams, getUniqueShowService, pageTitle){
-
-	$scope.$watch('feed.q', function() {
-		if($scope.feed.q){
-			$scope.podcast = getUniqueShowService.getItem($scope.feed.q.item, $routeParams.id);
-			pageTitle.setShowTitle($scope.podcast.title  + ' - ');
-		}
-	});
-}]);
-
-podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', 'pageTitle', 'angularPlayer', 'search', 'podcastsPlaylist', 'getFeedService', 'checkCurrentPodcastOnLoad', function ($scope, $location, $routeParams, pageTitle, angularPlayer, search, podcastsPlaylist, getFeedService, checkCurrentPodcastOnLoad){
-
-	$scope.pageTitleDefault = 'Podcast Player';
-	$scope.pageTitle = pageTitle;
-	pageTitle.setPodcastTitle($scope.pageTitleDefault);
 	$scope.keyword = search.str;
-	$scope.podcastsList = podcastsPlaylist.get();
-	$scope.feed = getFeedService.get();
 
-	$scope.isActive = function (id) {
-		return id == $routeParams.id;
-	};
-
-	var loadCurrentPodcastOnLoade = function(){
-		if(!$scope.podcastsList)
-			return;
-
-		var currentPodcastOnLoad;
-		angular.forEach($scope.podcastsList, function(item, i){
-			if(item.current === true)
-				currentPodcastOnLoad = item;
-		});
-
-		if(!currentPodcastOnLoad){
-			$location.url('/');
-			return;
+	$scope.$watch('feed.q', function() {
+		if($scope.feed.q){
+			var searchFeed = angular.copy($scope.feed.q);
+			$scope.searchFeed = searchFeedService.getSearchFeed(searchFeed);
 		}
-
-		getFeedService.set(currentPodcastOnLoad.url).then(function(res){
-			pageTitle.setPodcastTitle($scope.feed.q.title);
-			if(!$routeParams.id)
-				$location.url('/' +  $scope.feed.q.slug);
-		});
-	};
-	// loadCurrentPodcastOnLoade();
-
-	$scope.CurrentPodcastOnLoadUrl = checkCurrentPodcastOnLoad.get($scope.podcastsList);
-	console.log($scope.CurrentPodcastOnLoadUrl);
-	if($scope.isCurrentPodcastOnLoadUrl === false){
-		console.log('letscheckthebitch');
-		getFeedService.set($scope.CurrentPodcastOnLoadUrl).then(function(res){
-			pageTitle.setPodcastTitle($scope.feed.q.title);
-			if(!$routeParams.id)
-				$location.url('/' +  $scope.feed.q.slug);
-		});
-	}
-
-
+	});
 }]);
 ;
 
@@ -5798,6 +5776,14 @@ podcastApp.filter('highlight', function($sce) {
 // });
 
 ;
+podcastApp.factory('constants', [function(){
+	return {
+		imgDefault : function(){
+			return 'img/icon320x320.png';
+		}
+	};
+}]);
+
 podcastApp.factory('rssService', ['$http', function($http){
 
 	return {
@@ -5807,6 +5793,33 @@ podcastApp.factory('rssService', ['$http', function($http){
 	};
 }]);
 
+podcastApp.service('search', function(){
+	var _keyword = {};
+	this.str = _keyword;
+});
+;
+podcastApp.factory('checkCurrentPodcastOnLoad', ['$q', '$timeout', function($q, $timeout){
+
+	var getMessages = function(podcastsList) {
+		var deferred = $q.defer();
+
+		var currentPodcastOnLoad;
+		angular.forEach(podcastsList, function(item, i){
+			if(item.current === true)
+				currentPodcastOnLoad = item;
+		});
+		var currentPodcastUrl = (currentPodcastOnLoad) ? currentPodcastOnLoad.url : false;
+
+		deferred.resolve(currentPodcastUrl);
+
+		return deferred.promise;
+	};
+
+	return {
+		getMessages: getMessages
+	};
+}]);
+;
 podcastApp.factory('checkFeedService', [function(){
 
 	return {
@@ -5834,7 +5847,7 @@ podcastApp.factory('checkFeedService', [function(){
 		}
 	};
 }]);
-
+;
 podcastApp.factory('getFeedService', ['rssService', 'prepareFeedService', function(rssService, prepareFeedService){
 
 	var feed = {};
@@ -5851,85 +5864,7 @@ podcastApp.factory('getFeedService', ['rssService', 'prepareFeedService', functi
 		}
 	};
 }]);
-
-podcastApp.factory('constants', [function(){
-	return {
-		imgDefault : function(){
-			return 'img/icon320x320.png';
-		}
-	};
-}]);
-
-podcastApp.factory('prepareFeedService', ['constants', function(constants){
-
-	var imgDefault = constants.imgDefault();
-
-	return {
-		getFeed: function(feedData, url) {
-			var feed = feedData;
-				feed.url = url;
-				feed.slug = slug(feed.title);
-
-				if(feed.image.length >= 1){
-					for (var i = 0; i < feed.image.length; i++)
-						if(feed.image[i].href)
-							feed.podcastImg = feed.image[i].href;
-
-					if(!feed.podcastImg)
-						feed.podcastImg = imgDefault;
-
-				}else if(feed.image.href){
-						feed.podcastImg = feed.image.href;
-				}else{
-					feed.podcastImg = imgDefault;
-				}
-
-				angular.forEach(feed.item, function(item, i){
-
-					feed.item[i].artist = feed.title;
-					feed.item[i].id = 'id-' + i;
-					feed.item[i].date = Date.parse(feed.item[i].pubDate);
-
-					feed.item[i].url = feed.item[i].enclosure.url;
-					var podRouteTemp = feed.item[i].url.split('/'),
-						podRoute = podRouteTemp.slice(-1)[0];
-					feed.item[i].route = podRoute.split('.')[0];
-					feed.item[i].idc = feed.item[i].route + '-' + new Date(feed.item[i].pubDate).getTime();
-					if(feed.item[i].encoded)
-						feed.item[i].description = feed.item[i].encoded;
-				});
-
-			return feed;
-		}
-	};
-}]);
-
-podcastApp.factory('searchFeedService', [function(){
-
-	var fieldsToDeleteSearch = ['encoded', 'link', 'guid', 'enclosure', 'url', 'idc', 'thumbnail', 'explicit', 'pubDate', 'artist', 'author'];
-
-	return {
-		getSearchFeed: function(feedData) {
-
-			var searchFeed = feedData;
-
-			angular.forEach(searchFeed.item, function(item, i){
-
-				if(item.description)
-					searchFeed.item[i].description = item.description.replace(/<a[^>]*>(.*?)<\/a>/g, "$1");
-
-				for (var j = 0; j < fieldsToDeleteSearch.length - 1; j++) {
-					var itemToDelete = fieldsToDeleteSearch[j];
-					if(searchFeed.item[i][itemToDelete])
-						delete searchFeed.item[i][itemToDelete];
-				}
-			});
-
-			return searchFeed;
-		}
-	};
-}]);
-
+;
 podcastApp.factory('getUniqueShowService', [function(){
 
 	return {
@@ -5948,31 +5883,7 @@ podcastApp.factory('getUniqueShowService', [function(){
 		}
 	};
 }]);
-
-podcastApp.factory('pageTitle', function(){
-	var showTitle = '';
-	var podcastTitle = '';
-	return {
-		showTitle: function() {
-			return showTitle;
-		},
-		setShowTitle: function(newShowTitle) {
-			showTitle = newShowTitle;
-		},
-		podcastTitle: function(){
-			return podcastTitle;
-		},
-		setPodcastTitle: function(newPodcastTitle){
-			podcastTitle = newPodcastTitle;
-		}
-	};
-});
-
-podcastApp.service('search', function(){
-	var _keyword = {};
-	this.str = _keyword;
-});
-
+;
 podcastApp.factory('localStorageHandler', [function(){
 
 	var podcastsList = [];
@@ -5993,7 +5904,26 @@ podcastApp.factory('localStorageHandler', [function(){
 		}
 	};
 }]);
-
+;
+podcastApp.factory('pageTitle', function(){
+	var showTitle = '';
+	var podcastTitle = '';
+	return {
+		showTitle: function() {
+			return showTitle;
+		},
+		setShowTitle: function(newShowTitle) {
+			showTitle = newShowTitle;
+		},
+		podcastTitle: function(){
+			return podcastTitle;
+		},
+		setPodcastTitle: function(newPodcastTitle){
+			podcastTitle = newPodcastTitle;
+		}
+	};
+});
+;
 podcastApp.factory('podcastsPlaylist', ['localStorageHandler', function(localStorageHandler){
 
 	var podcastsList = localStorageHandler.getOnLoad();
@@ -6039,22 +5969,73 @@ podcastApp.factory('podcastsPlaylist', ['localStorageHandler', function(localSto
 	};
 }]);
 
-podcastApp.factory('checkCurrentPodcastOnLoad', [function(){
+;
+podcastApp.factory('prepareFeedService', ['constants', function(constants){
+
+	var imgDefault = constants.imgDefault();
 
 	return {
-		get: function(podcastsList){
+		getFeed: function(feedData, url) {
+			var feed = feedData;
+				feed.url = url;
+				feed.slug = slug(feed.title);
 
-			if(!podcastsList)
-				return;
+				if(feed.image.length >= 1){
+					for (var i = 0; i < feed.image.length; i++)
+						if(feed.image[i].href)
+							feed.podcastImg = feed.image[i].href;
 
-			var currentPodcastOnLoad;
-			angular.forEach(podcastsList, function(item, i){
-				if(item.current === true)
-					currentPodcastOnLoad = item;
-			});
+					if(!feed.podcastImg)
+						feed.podcastImg = imgDefault;
 
-			return (currentPodcastOnLoad) ? currentPodcastOnLoad.url : false;
+				}else if(feed.image.href){
+						feed.podcastImg = feed.image.href;
+				}else{
+					feed.podcastImg = imgDefault;
+				}
+
+				angular.forEach(feed.item, function(item, i){
+
+					feed.item[i].artist = feed.title;
+					feed.item[i].id = 'id-' + i;
+					feed.item[i].date = Date.parse(feed.item[i].pubDate);
+
+					feed.item[i].url = feed.item[i].enclosure.url;
+					var podRouteTemp = feed.item[i].url.split('/'),
+						podRoute = podRouteTemp.slice(-1)[0];
+					feed.item[i].route = podRoute.split('.')[0];
+					feed.item[i].idc = feed.item[i].route + '-' + new Date(feed.item[i].pubDate).getTime();
+					if(feed.item[i].encoded)
+						feed.item[i].description = feed.item[i].encoded;
+				});
+
+			return feed;
 		}
 	};
 }]);
+;
+podcastApp.factory('searchFeedService', [function(){
 
+	var fieldsToDeleteSearch = ['encoded', 'link', 'guid', 'enclosure', 'url', 'idc', 'thumbnail', 'explicit', 'pubDate', 'artist', 'author'];
+
+	return {
+		getSearchFeed: function(feedData) {
+
+			var searchFeed = feedData;
+
+			angular.forEach(searchFeed.item, function(item, i){
+
+				if(item.description)
+					searchFeed.item[i].description = item.description.replace(/<a[^>]*>(.*?)<\/a>/g, "$1");
+
+				for (var j = 0; j < fieldsToDeleteSearch.length - 1; j++) {
+					var itemToDelete = fieldsToDeleteSearch[j];
+					if(searchFeed.item[i][itemToDelete])
+						delete searchFeed.item[i][itemToDelete];
+				}
+			});
+
+			return searchFeed;
+		}
+	};
+}]);
