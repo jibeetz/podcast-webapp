@@ -1,28 +1,34 @@
-<header>
-	<h1>Podcast reader</h1>
-	<div id="player-container">
-		<div ng-show="currentPlaying.url.length">
-			<button play-pause-toggle data-play="Play!" data-pause="Pause!">Play Toggle</button> <button stop-music>Stop</button>
-			<div class="seekBase" seek-track>
-				<div class="seekLoad" ng-style="{width : ( progress + '%' ) }"></div>
-			</div>
-			{{currentPlaying.title}} by {{currentPlaying.artist}} - {{currentPostion}} / {{currentDuration}}
-		</div>
+<div class="controls" ng-show="currentPlaying.url.length">
+	<button play-pause-toggle data-play="Play!" data-pause="Pause!">Play Toggle</button>
+	<button stop-music>Stop</button>
+</div>
 
-		<div class="playlist">
-			<button clear-playlist>Clear Playlist</button>
-			<ul>
-				<li ng-repeat="song in playlist"><a play-from-playlist="song">{{song.title}}</a> - <a remove-from-playlist="song" data-index="{{$index}}"><small>(remove)</small></a> <span ng-if="currentPlaying.id == song.id">- (current)</span></li>
-			</ul>
-		</div>
-		<div class="volume">
-			<button music-volume data-type="increase">+</button>
-			<button music-volume data-type="decrease">-</button>
-			<button mute-music>Mute ({{mute}})</button> volume: {{volume}}<br><br>
-			<div volume-bar style="height: 10px; background: gray" ng-class="{'active': mute}">
-				<div style="background:red; height: 10px" ng-style="{width : ( volume-bar + '%' ) }"></div>
-			</div>
-			<br><br>volumebar: {{volume-bar}}
-		</div>
+<div class="volume">
+	<button music-volume data-type="increase">+</button>
+	<button music-volume data-type="decrease">-</button>
+	<button mute-music>Mute ({{mute}})</button> volume: {{volume}}
+	<div volume-bar style="height: 10px; background: gray" ng-class="{'active': mute}">
+		<div style="background:red; height: 10px" ng-style="{width : ( volume-bar + '%' ) }"></div>
 	</div>
-</header>
+	volumebar: {{volume-bar}}
+</div>
+
+<div class="info-show" ng-show="currentPlaying.url.length">
+	<div class="seekBase" seek-track>
+		<div class="seekLoad" ng-style="{width : ( progress + '%' ) }"></div>
+	</div>
+	{{currentPlaying.title}} by {{currentPlaying.artist}} - {{currentPostion}} / {{currentDuration}}
+</div>
+
+<div class="playlist">
+	<button clear-playlist ng-show="currentPlaying.url.length">Clear Playlist</button>
+	<ul>
+		<li ng-repeat="song in playlist">
+			<a play-from-playlist="song">{{song.title}} - {{song.author}}</a>
+			<a remove-from-playlist="song" data-index="{{$index}}">
+				<small>(remove)</small>
+			</a>
+			<span ng-if="currentPlaying.id == song.id">- (current)</span>
+		</li>
+	</ul>
+</div>

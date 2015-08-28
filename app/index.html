@@ -10,15 +10,23 @@
 	</head>
 	<body>
 		<sound-manager></sound-manager>
-		<div id="container">
-			<div id="top">
+		
+		<header>
+
+			<div id="player" ng-show="feed.q">
+				<ng-include src="'partials/player.html'"></ng-include>
+			</div>
+
+			<div id="no-player" ng-show="!feed.q">no podcast loaded</div>
+
+			<div id="input">
 				<ng-include src="'partials/input.html'" ng-controller="feedsCtrl"></ng-include>
 				<ng-include src="'partials/playlist.html'" ng-controller="playlistCtrl"></ng-include>
 			</div>
 
-			<div ng-show="!feed.q">no podcast loaded</div>
+		</header>
 
-			<ng-include ng-show="feed.q" src="'partials/player.html'"></ng-include>
+		<div id="container">
 
 			<section ng-show="feed.q">
 				<ng-include src="'partials/details.html'"></ng-include>

@@ -31,12 +31,12 @@ a{
 
 section{
 	float: right;
-	width: 71%;
+	width: ~"calc(75% - 45px)";
 	padding: 15px;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	background-color: #FFF;
-	margin: 15px 15px 15px 0;
+	margin: 0 15px 15px;
 	border: 1px solid #ECECEC;
 }
 
@@ -47,9 +47,7 @@ section:after{
 }
 
 header{
-	background-color: #fff;
-	padding: 25px;
-	border-bottom: 1px solid #ececec;
+	/*height: 100px;*/
 }
 
 h1{
@@ -241,6 +239,29 @@ h2 a{
 
 /* Player */
 
+header > div{
+	background-color: #FFF;
+	border: 1px solid #ECECEC;
+	padding: 10px;
+	margin: 15px;
+	height: 100px;
+}
+
+#player, #no-player{
+	width: ~"calc(75% - 45px)";
+	float: right;
+	margin-top: 0;
+}
+
+#input{
+	width: 25%;
+}
+
+.controls, .volume, .playlist, .info-show {
+	width: 25%;
+	float: left;
+}
+
 .seekBase {
 	height: 30px;
 	width: 90%;
@@ -256,3 +277,4 @@ h2 a{
 	font-size: 0.9em;
 	margin-top: 10px;
 }
+
