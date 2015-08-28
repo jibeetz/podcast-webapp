@@ -5554,14 +5554,9 @@ var slug = function(str) {
 var main = {
 	listHeight: function(){
 
-		function setSize(){
-			var windowHeight = parseInt($(window).height()),
-				sectionHeight = parseInt($('section').height() - 105),
-				listHeight = (sectionHeight > windowHeight) ? sectionHeight : windowHeight;
+		var windowHeight = parseInt($(window).height());
+		$('aside, section').css('height', windowHeight - 145);
 
-			$('#list').css('height', listHeight - 105);
-		}
-		setTimeout(setSize,100);
 	}
 };
 

@@ -10,7 +10,7 @@
 	</head>
 	<body>
 		<sound-manager></sound-manager>
-		
+
 		<header>
 
 			<div id="player" ng-show="feed.q">
@@ -36,7 +36,9 @@
 				<div id="details" ng-view ng-show="!keyword.str.length"></div>
 			</section>
 
-			<ng-include src="'partials/list.html'" ng-show="feed.q"></ng-include>
+			<aside>
+				<ng-include src="'partials/list.html'" ng-show="feed.q"></ng-include>
+			</aside>
 		</div>
 	</body>
 </html>

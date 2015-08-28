@@ -37,6 +37,7 @@ section {
   background-color: #FFF;
   margin: 0 15px 15px;
   border: 1px solid #ECECEC;
+  overflow: scroll;
 }
 section:after {
   content: '';
@@ -169,7 +170,7 @@ h2 a {
   border: 1px solid #ECECEC;
 }
 /* List */
-#list {
+aside {
   width: 25%;
   overflow: scroll;
   font-size: 12px;
@@ -179,7 +180,7 @@ h2 a {
   padding: 0 10px;
   background-color: #FFF;
 }
-#list li a {
+aside li a {
   text-decoration: none;
   display: block;
   padding: 12px 7px;
@@ -194,11 +195,13 @@ h2 a {
 #list li:last-child a {
   border-bottom: none;
 }
-#list::-webkit-scrollbar {
+aside::-webkit-scrollbar,
+section::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
 }
-#list::-webkit-scrollbar-thumb {
+aside::-webkit-scrollbar-thumb,
+section::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
