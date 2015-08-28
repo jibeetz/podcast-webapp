@@ -1,4 +1,4 @@
-<header ng-show="feed">
+<header>
 	<h1>Podcast reader</h1>
 	<div id="player-container">
 		<div ng-show="currentPlaying.url.length">
@@ -6,8 +6,9 @@
 			<div class="seekBase" seek-track>
 				<div class="seekLoad" ng-style="{width : ( progress + '%' ) }"></div>
 			</div>
-			{{ currentPlaying.title }} by {{ currentPlaying.artist }} - {{ currentPostion }} / {{ currentDuration }}
+			{{currentPlaying.title}} by {{currentPlaying.artist}} - {{currentPostion}} / {{currentDuration}}
 		</div>
+
 		<div class="playlist">
 			<button clear-playlist>Clear Playlist</button>
 			<ul>
@@ -15,7 +16,9 @@
 			</ul>
 		</div>
 		<div class="volume">
-			<button music-volume data-type="increase">+</button> <button music-volume data-type="decrease">-</button> <button mute-music>Mute ({{ mute }})</button> volume: {{volume}}<br><br>
+			<button music-volume data-type="increase">+</button>
+			<button music-volume data-type="decrease">-</button>
+			<button mute-music>Mute ({{mute}})</button> volume: {{volume}}<br><br>
 			<div volume-bar style="height: 10px; background: gray" ng-class="{'active': mute}">
 				<div style="background:red; height: 10px" ng-style="{width : ( volume-bar + '%' ) }"></div>
 			</div>

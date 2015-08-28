@@ -25,6 +25,9 @@ a {
   /* max-width: 940px;
 	margin: auto; */
 }
+#right {
+  padding-left: 28%;
+}
 section {
   float: right;
   width: 71%;
@@ -40,86 +43,31 @@ section:after {
   display: table;
   clear: both;
 }
-#logo {
-  float: right;
-  width: 150px;
-  margin: 0 0 10px 15px;
-  border: 1px solid #ECECEC;
-}
-#list {
-  width: 25%;
-  overflow: scroll;
-  font-size: 12px;
-  border: 1px solid #ECECEC;
-  -webkit-overflow-scrolling: touch;
-  margin: 15px;
-  padding: 0 10px;
-  background-color: #FFF;
-}
-#list li a {
-  text-decoration: none;
-  display: block;
-  padding: 12px 7px;
-  color: #424242;
+header {
+  background-color: #fff;
+  padding: 25px;
   border-bottom: 1px solid #ececec;
-  background: #fff;
-}
-#list li a.active,
-#list li a:hover {
-  color: #48598E;
-}
-#list li:last-child a {
-  border-bottom: none;
-}
-.date {
-  font-size: 0.8em;
-}
-.mp3-hidden {
-  display: none;
-}
-#right {
-  padding-left: 28%;
-}
-#title {
-  padding: 0;
 }
 h1 {
+  font-weight: normal;
   font-size: 21px;
 }
 h1 a {
   text-decoration: none;
   color: #5F5F5F;
 }
+.date {
+  font-size: 0.8em;
+  margin: 3px 0 0;
+}
+#title {
+  padding: 0;
+}
 .sub {
   font-size: 0.8em;
   margin-top: 2px;
 }
-.sub-author {
-  margin-top: 7px;
-}
-#details {
-  float: left;
-  font-size: 0.9em;
-  padding: 10px 0;
-  margin-top: 10px;
-  margin-bottom: 15px;
-  width: 100%;
-  border-top: 1px solid #ECECEC;
-}
-#details h2 {
-  margin: 0;
-  font-size: 18px;
-}
-#details p,
-#details > div > ul {
-  padding: 7px 0;
-  line-height: 1.3em;
-  font-size: 0.9em;
-}
-.highlighted {
-  background-color: #FF0;
-  padding: 0 1px;
-}
+/* Search */
 #podcast-search {
   margin: 50px 5px 10px 0;
   padding: 7px;
@@ -127,6 +75,9 @@ h1 a {
   width: 300px;
   border: 1px solid #ECECEC;
   background-color: #F9F9F9;
+}
+h3 {
+  margin: 10px 0;
 }
 a.clear-search {
   text-decoration: none;
@@ -140,9 +91,6 @@ a.clear-search {
   color: #FFF;
   line-height: 0.8em;
   font-size: 1.2em;
-}
-h3 {
-  margin: 10px 0;
 }
 a.clear-search:hover {
   background: #8A96B5;
@@ -169,10 +117,6 @@ a.clear-search:hover {
   border-bottom: none;
   padding-bottom: 5px;
 }
-.date {
-  font-size: 0.8em;
-  margin: 3px 0 0;
-}
 #search-results .date {
   margin: 3px 0 10px;
 }
@@ -185,15 +129,19 @@ a.clear-search:hover {
 #search-results .title {
   font-weight: bold;
 }
-header {
-  background-color: #fff;
-  padding: 25px;
-  border-bottom: 1px solid #ececec;
+.highlighted {
+  background-color: #FF0;
+  padding: 0 1px;
 }
-h1 {
-  font-weight: normal;
-  font-style: italic;
-  font-family: georgia, serif;
+/* Details */
+#details {
+  float: left;
+  font-size: 0.9em;
+  padding: 10px 0;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+  border-top: 1px solid #ECECEC;
 }
 h2 {
   margin: 0;
@@ -202,6 +150,51 @@ h2 {
 }
 h2 a {
   color: #5F5F5F;
+}
+.sub-author {
+  margin-top: 7px;
+}
+#details h2 {
+  margin: 0;
+  font-size: 18px;
+}
+#details p,
+#details > div > ul {
+  padding: 7px 0;
+  line-height: 1.3em;
+  font-size: 0.9em;
+}
+#logo {
+  float: right;
+  width: 150px;
+  margin: 0 0 10px 15px;
+  border: 1px solid #ECECEC;
+}
+/* List */
+#list {
+  width: 25%;
+  overflow: scroll;
+  font-size: 12px;
+  border: 1px solid #ECECEC;
+  -webkit-overflow-scrolling: touch;
+  margin: 15px;
+  padding: 0 10px;
+  background-color: #FFF;
+}
+#list li a {
+  text-decoration: none;
+  display: block;
+  padding: 12px 7px;
+  color: #424242;
+  border-bottom: 1px solid #ececec;
+  background: #fff;
+}
+#list li a.active,
+#list li a:hover {
+  color: #48598E;
+}
+#list li:last-child a {
+  border-bottom: none;
 }
 #list::-webkit-scrollbar {
   -webkit-appearance: none;
@@ -212,6 +205,7 @@ h2 a {
   background-color: rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
+/* Player */
 .seekBase {
   height: 30px;
   width: 90%;

@@ -9,15 +9,15 @@ Web Podcast player
 
 ## Installation
 
-* npm install
+	npm install
 
 ## Start
 
-* npm start
+	npm start
 
 ## Dev
 
-* grunt dev
+	grunt dev
 
 ## Go to prod
 
@@ -25,4 +25,3 @@ Web Podcast player
 
 ## TODO
 - UI
-- Assembled playlists functionality

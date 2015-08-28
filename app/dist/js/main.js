@@ -5693,7 +5693,6 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 	$scope.currentPodcastText = 'current';
 	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
-	$scope.podcastsList = podcastsPlaylist.get();
 
 	$scope.playFeed = function(url){
 
