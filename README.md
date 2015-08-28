@@ -24,6 +24,5 @@ Web Podcast player
 * grunt prod
 
 ## TODO
-- Recheck Install process, remove js/lib
-- Refactor controllers
 - UI
+- Assembled playlists functionality
