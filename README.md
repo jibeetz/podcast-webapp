@@ -28,6 +28,8 @@ Web Podcast player
 - Debug add to Playlist check by ID -> check by slug
 - current on top of loop filter
 - playlist trim on one line + ...
+- Refactor pageCtrl
+- organize CSS
 
 ### Next version
 - Rewind 15 secs
