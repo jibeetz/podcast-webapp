@@ -4867,6 +4867,17 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 return false;
             },
             /**
+             * To check if url is in array
+             */
+            isInArrayUrl: function(array, value) {
+                for(var i = 0; i < array.length; i++) {
+                    if(array[i].url === value) {
+                        return i;
+                    }
+                }
+                return false;
+            },
+            /**
              * getIndexByValue used by this factory
              */
             getIndexByValue: function(array, value) {
@@ -4941,7 +4952,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 }
 
                 //check if song already does not exists then add to playlist
-                var inArrayKey = this.isInArray(this.getPlaylist(), track.id);
+                var inArrayKey = this.isInArrayUrl(this.getPlaylist(), track.url);
                 if(inArrayKey === false) {
                     //$log.debug('song does not exists in playlist');
                     //add to sound manager
@@ -5607,7 +5618,7 @@ podcastApp.config(['$routeProvider', function ($routeProvider){
 	});
 }]);
 ;
-podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', function ($scope, $timeout, $location, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle){
+podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', function ($scope, $timeout, $location, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox){
 
 	$scope.feed = getFeedService.get();
 	$scope.inputRssFeed = {};
@@ -5625,6 +5636,24 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			}, 500);
 		});
 	};
+
+	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
+
+	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
+
+	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false: true);
+	$scope.addRss = inputBox.get();
+
+	var toggleAddrssBtnFn = function(){
+		$scope.toggleAddrssBtn = ($scope.addRss.b) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
+	}
+	toggleAddrssBtnFn();
+
+
+	$scope.toggleAddrss = function(){
+		inputBox.set(($scope.addRss.b) ? false : true);
+		toggleAddrssBtnFn();
+	}
 
 	var resetChecked = function(){
 		$scope.checkedFeed = [];
@@ -5647,7 +5676,8 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			podcastsPlaylist.setCurrent($scope.feed.q.url);
 			resetChecked();
 			$location.url('/' +  $scope.feed.q.slug);
-			$scope.addRss = false;
+			inputBox.set(false);
+			toggleAddrssBtnFn();
 		});
 	};
 
@@ -5696,59 +5726,24 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 			pageTitle.setPodcastTitle($scope.feed.q.title);
 			if(!$routeParams.id)
 				$location.url('/' +  $scope.feed.q.slug);
+
+			// console.log($scope.feed);
 		});
 	};
 
 	checkCurrentPodcastOnLoad.getMessages($scope.podcastsList).then(getFeed);
 
-	//-------------------------------------
 
-	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
-
-	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
-
-	$scope.addRss = ($scope.podcastsList.length) ? false: true;
-
-	var toggleAddrssBtnFn = function(){
-		$scope.toggleAddrssBtn = ($scope.addRss) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
-	}
-	toggleAddrssBtnFn();
-
-	$scope.toggleAddrss = function(){
-		$scope.addRss = ($scope.addRss) ? false : true;
-		toggleAddrssBtnFn();
-	}
-
-	//-------------------------------------
-
-	// $scope.listrss = true;
-
-	// $scope.toggleListrssBtnMore = '<svg class="icon icon-bottom"><use xlink:href="assets/icons.svg#icon-bottom"></use></svg>';
-
-	// $scope.toggleListrssBtnLess = '<svg class="icon icon-top"><use xlink:href="assets/icons.svg#icon-top"></use></svg>';
-
-	// var toggleListrssBtnFn = function(){
-	// 	$scope.toggleListrssBtn = ($scope.listrss) ? $scope.toggleListrssBtnMore : $scope.toggleListrssBtnLess;
-	// 	$scope.allListrss = ($scope.listrss) ? false : true;
-	// }
-	// toggleListrssBtnFn();
-
-	// $scope.toggleListrss = function(){
-	// 	$scope.listrss = ($scope.listrss) ? false : true;
-	// 	toggleListrssBtnFn();
-	// }
-
-	// $scope.isListrssMore = function(){
-	// 	return ($scope.podcastsList.length > 4 && !$scope.addRss) ? true : false;
-	// };
 
 }]);
 ;
-podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer){
+podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', 'inputBox', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer, inputBox){
 
 	$scope.currentPodcastText = '<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>';
 	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
+
+	$scope.addRss = inputBox.get();
 
 	$scope.playFeed = function(url){
 
@@ -5769,21 +5764,42 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 		podcastsPlaylist.removePodcast(url);
 
 		if($scope.feed.q && $scope.feed.q.url == url){
-			if(confirm('Are you sure you want to remove the podcast ?')){
-				delete $scope.feed.q;
-				pageTitle.setPodcastTitle($scope.pageTitleDefault);
-				pageTitle.setShowTitle('');
 
-				if($scope.currentPlaying){
-					$timeout(function(){
-						angularPlayer.stop();
-					});
+			delete $scope.feed.q;
+			pageTitle.setPodcastTitle($scope.pageTitleDefault);
+			pageTitle.setShowTitle('');
 
-					$scope.currentPlaying = [];
-				}
-				$location.url('/');
+			if($scope.currentPlaying){
+				$timeout(function(){
+					angularPlayer.stop();
+				});
+
+				$scope.currentPlaying = [];
 			}
+			$location.url('/');
+
 		}
+	};
+
+	$scope.listrss = true;
+
+	$scope.toggleListrssBtnMore = '<svg class="icon icon-bottom"><use xlink:href="assets/icons.svg#icon-bottom"></use></svg>';
+
+	$scope.toggleListrssBtnLess = '<svg class="icon icon-top"><use xlink:href="assets/icons.svg#icon-top"></use></svg>';
+
+	var toggleListrssBtnFn = function(){
+		$scope.toggleListrssBtn = ($scope.listrss) ? $scope.toggleListrssBtnMore : $scope.toggleListrssBtnLess;
+		$scope.allListrss = ($scope.listrss) ? false : true;
+	}
+	toggleListrssBtnFn();
+
+	$scope.toggleListrss = function(){
+		$scope.listrss = ($scope.listrss) ? false : true;
+		toggleListrssBtnFn();
+	}
+
+	$scope.isListrssMore = function(){
+		return ($scope.podcastsList.length > 4 && !$scope.addRss.b) ? true : false;
 	};
 }]);
 ;
@@ -5818,6 +5834,41 @@ podcastApp.filter('highlight', function($sce) {
 	};
 });
 
+podcastApp.filter('currentOnTop', function() {
+
+	function CustomOrder(item){
+		switch(item) {
+			case true:
+				return 0;
+			case false:
+				return 1;
+		}
+	}
+
+	return function(items) {
+		var filtered = [];
+		angular.forEach(items, function(item) {
+			filtered.push(item);
+		});
+		filtered.sort(function (a, b) {
+			return (CustomOrder(a.current) > CustomOrder(b.current) ? 1 : -1);
+		});
+
+		return filtered;
+	};
+});
+
+podcastApp.filter('strLimit', ['$filter', function($filter) {
+	return function(input, limit) {
+		if (!input)
+			return;
+		if (input.length <= limit) {
+			return input;
+		}
+		return $filter('limitTo')(input, limit) + '...';
+	};
+}]);
+
 // podcastApp.filter('linkRemover', function() {
 // 	return function(text) {
 // 		return String(text).replace(/<a[^>]*>(.*?)<\/a>/g, "$1");
@@ -5851,6 +5902,19 @@ podcastApp.factory('rssService', ['$http', function($http){
 podcastApp.service('search', function(){
 	var _keyword = {};
 	this.str = _keyword;
+});
+
+podcastApp.factory('inputBox', function(){
+	var inputBox = {};
+
+	return {
+		get: function() {
+			return inputBox;
+		},
+		set: function(input) {
+			inputBox.b = input;
+		}
+	};
 });
 ;
 podcastApp.factory('checkCurrentPodcastOnLoad', ['$q', '$timeout', function($q, $timeout){
@@ -6062,6 +6126,7 @@ podcastApp.factory('prepareFeedService', ['constants', function(constants){
 					feed.item[i].idc = feed.item[i].route + '-' + new Date(feed.item[i].pubDate).getTime();
 					if(feed.item[i].encoded)
 						feed.item[i].description = feed.item[i].encoded;
+					feed.item[i].titleauthor = feed.item[i].title + ' - ' + feed.item[i].artist;
 				});
 
 			return feed;

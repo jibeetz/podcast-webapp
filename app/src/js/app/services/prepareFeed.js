@@ -35,6 +35,7 @@ podcastApp.factory('prepareFeedService', ['constants', function(constants){
 					feed.item[i].idc = feed.item[i].route + '-' + new Date(feed.item[i].pubDate).getTime();
 					if(feed.item[i].encoded)
 						feed.item[i].description = feed.item[i].encoded;
+					feed.item[i].titleauthor = feed.item[i].title + ' - ' + feed.item[i].artist;
 				});
 
 			return feed;

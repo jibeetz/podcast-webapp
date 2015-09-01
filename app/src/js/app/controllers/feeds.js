@@ -1,4 +1,4 @@
-podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', function ($scope, $timeout, $location, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle){
+podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', function ($scope, $timeout, $location, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox){
 
 	$scope.feed = getFeedService.get();
 	$scope.inputRssFeed = {};
@@ -16,6 +16,24 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			}, 500);
 		});
 	};
+
+	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
+
+	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
+
+	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false: true);
+	$scope.addRss = inputBox.get();
+
+	var toggleAddrssBtnFn = function(){
+		$scope.toggleAddrssBtn = ($scope.addRss.b) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
+	}
+	toggleAddrssBtnFn();
+
+
+	$scope.toggleAddrss = function(){
+		inputBox.set(($scope.addRss.b) ? false : true);
+		toggleAddrssBtnFn();
+	}
 
 	var resetChecked = function(){
 		$scope.checkedFeed = [];
@@ -38,7 +56,8 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			podcastsPlaylist.setCurrent($scope.feed.q.url);
 			resetChecked();
 			$location.url('/' +  $scope.feed.q.slug);
-			$scope.addRss = false;
+			inputBox.set(false);
+			toggleAddrssBtnFn();
 		});
 	};
 

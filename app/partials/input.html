@@ -1,7 +1,6 @@
 <button ng-click="toggleAddrss()" class="toggle-addrss-btn" ng-bind-html="toggleAddrssBtn">
 </button>
-
-<div class="add-rss" ng-show="addRss">
+<div class="add-rss" ng-show="addRss.b">
 	<form ng-submit="checkFeed()">
 		<input type="text" placeholder="RSS Feed" ng-model="inputRssFeed.url">
 		<input type="submit" value="Load RSS">

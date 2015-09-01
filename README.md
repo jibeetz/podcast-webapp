@@ -24,11 +24,12 @@ Web Podcast player
 	grunt prod
 
 ## TODO
-- Add service to handle input rss box toggle display
-- Debug add to Playlist check by ID -> check by slug
-- current on top of loop filter
-- playlist trim on one line + ...
-- Refactor pageCtrl
+DONE Add service to handle input rss box toggle display
+DONE Debug add to Playlist check by ID -> check by slug
+DONE current on top of loop filter
+DONE playlist trim on one line + ...
+DONE playlist toggle
+- Refactor svg in ctrls
 - organize CSS
 
 ### Next version

@@ -19,3 +19,16 @@ podcastApp.service('search', function(){
 	var _keyword = {};
 	this.str = _keyword;
 });
+
+podcastApp.factory('inputBox', function(){
+	var inputBox = {};
+
+	return {
+		get: function() {
+			return inputBox;
+		},
+		set: function(input) {
+			inputBox.b = input;
+		}
+	};
+});

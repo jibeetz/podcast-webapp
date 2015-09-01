@@ -24,7 +24,7 @@
 
 .card {
 	background-color: #FFF;
-	border: 1px solid #FFF;
+	border: 1px solid #EFEFEF;
 	padding: 10px;
 	border-radius: 2px;
 	margin: 15px;
@@ -43,7 +43,7 @@ html, body, ul, li, h1, p{
 }
 
 body{
-	background: #0F5471;
+	background: #EFEFEF;
 	font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
 	color: #5F5F5F;
 }
@@ -281,11 +281,11 @@ aside .date{
 	width: 8px;
 }
 
-aside::-webkit-scrollbar, section::-webkit-scrollbar {
+aside::-webkit-scrollbar, section::-webkit-scrollbar, .playlist ul::-webkit-scrollbar {
 	-webkit-appearance: none;
 	width: 7px;
 }
-aside::-webkit-scrollbar-thumb, section::-webkit-scrollbar-thumb {
+aside::-webkit-scrollbar-thumb, section::-webkit-scrollbar-thumb, .playlist ul::-webkit-scrollbar-thumb {
 	border-radius: 4px;
 	background-color: rgba(0, 0, 0, .5);
 	-webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
@@ -510,8 +510,10 @@ header > div{
 
 .current-title{
 	font-size: 0.9em;
-	line-height: 1.4;
+	line-height: 1.3;
 	margin-top: 5px;
+	height: 39px;
+	overflow: hidden;
 }
 
 .current-position, .current-duration, .seekBase{
@@ -572,6 +574,7 @@ header > div{
 	padding: 5px 5px 10px 15px;
 	overflow: hidden;
 	height: 98px;
+	overflow-y: scroll;
 }
 
 .playlist li{
@@ -583,12 +586,13 @@ header > div{
 	cursor: pointer;
 	line-height: 1.3em;
 	display: inherit;
+	font-size: 0.9em;
 }
 
 .playlist-current{
 	position: absolute;
 	left: -10px;
-	top: 1px;
+	top: -1px;
 	padding: 0;
 	line-height: 1;
 }
@@ -630,4 +634,9 @@ a.remove-from-playlist svg{
 	fill: white;
 	width: 8px;
 	height: 8px;
+}
+
+.checked-info{
+	font-size: 0.8em;
+	padding: 12px 15px;
 }

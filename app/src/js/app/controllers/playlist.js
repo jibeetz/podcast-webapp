@@ -1,8 +1,10 @@
-podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer){
+podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', 'inputBox', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer, inputBox){
 
 	$scope.currentPodcastText = '<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>';
 	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
+
+	$scope.addRss = inputBox.get();
 
 	$scope.playFeed = function(url){
 
@@ -23,20 +25,41 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 		podcastsPlaylist.removePodcast(url);
 
 		if($scope.feed.q && $scope.feed.q.url == url){
-			if(confirm('Are you sure you want to remove the podcast ?')){
-				delete $scope.feed.q;
-				pageTitle.setPodcastTitle($scope.pageTitleDefault);
-				pageTitle.setShowTitle('');
 
-				if($scope.currentPlaying){
-					$timeout(function(){
-						angularPlayer.stop();
-					});
+			delete $scope.feed.q;
+			pageTitle.setPodcastTitle($scope.pageTitleDefault);
+			pageTitle.setShowTitle('');
 
-					$scope.currentPlaying = [];
-				}
-				$location.url('/');
+			if($scope.currentPlaying){
+				$timeout(function(){
+					angularPlayer.stop();
+				});
+
+				$scope.currentPlaying = [];
 			}
+			$location.url('/');
+
 		}
+	};
+
+	$scope.listrss = true;
+
+	$scope.toggleListrssBtnMore = '<svg class="icon icon-bottom"><use xlink:href="assets/icons.svg#icon-bottom"></use></svg>';
+
+	$scope.toggleListrssBtnLess = '<svg class="icon icon-top"><use xlink:href="assets/icons.svg#icon-top"></use></svg>';
+
+	var toggleListrssBtnFn = function(){
+		$scope.toggleListrssBtn = ($scope.listrss) ? $scope.toggleListrssBtnMore : $scope.toggleListrssBtnLess;
+		$scope.allListrss = ($scope.listrss) ? false : true;
+	}
+	toggleListrssBtnFn();
+
+	$scope.toggleListrss = function(){
+		$scope.listrss = ($scope.listrss) ? false : true;
+		toggleListrssBtnFn();
+	}
+
+	$scope.isListrssMore = function(){
+		return ($scope.podcastsList.length > 4 && !$scope.addRss.b) ? true : false;
 	};
 }]);

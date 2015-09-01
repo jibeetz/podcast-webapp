@@ -29,7 +29,7 @@
 </div>
 
 <div class="info-show" ng-show="currentPlaying.url.length">
-	<div class="current-title">{{currentPlaying.title}}</div>
+	<div class="current-title" title="{{currentPlaying.title}}">{{currentPlaying.title | strLimit: 115}}</div>
 	<div class="control-bar">
 		<div class="current-position">{{currentPostion}}</div>
 		<div class="seekBase" seek-track>
@@ -50,7 +50,7 @@
 					<use xlink:href="assets/icons.svg#icon-close"></use>
 				</svg>
 			</a>
-			<a play-from-playlist="song">{{song.title}} - {{song.author}}</a>
+			<a play-from-playlist="song" title="{{song.titleauthor}}">{{song.titleauthor | strLimit: 60}}</a>
 		</li>
 	</ul>
 </div>

@@ -4528,6 +4528,17 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 return false;
             },
             /**
+             * To check if url is in array
+             */
+            isInArrayUrl: function(array, value) {
+                for(var i = 0; i < array.length; i++) {
+                    if(array[i].url === value) {
+                        return i;
+                    }
+                }
+                return false;
+            },
+            /**
              * getIndexByValue used by this factory
              */
             getIndexByValue: function(array, value) {
@@ -4602,7 +4613,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 }
 
                 //check if song already does not exists then add to playlist
-                var inArrayKey = this.isInArray(this.getPlaylist(), track.id);
+                var inArrayKey = this.isInArrayUrl(this.getPlaylist(), track.url);
                 if(inArrayKey === false) {
                     //$log.debug('song does not exists in playlist');
                     //add to sound manager
