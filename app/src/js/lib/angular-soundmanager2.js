@@ -169,6 +169,8 @@
         this.sounds = {};
         this.soundIDs = [];
         this.muted = false;
+        this.muteBtn = '<svg class="icon icon-volume-mute"><use xlink:href="assets/icons.svg#icon-volume-mute"></use></svg>';
+        this.unmuteBtn = '<svg class="icon icon-volume-high"><use xlink:href="assets/icons.svg#icon-volume-high"></use></svg>';
         this.didFlashBlock = false;
         this.filePattern = null;
         this.filePatterns = {
@@ -5013,9 +5015,11 @@ ngSoundManager.directive('muteMusic', ['angularPlayer', function (angularPlayer)
                 });
 
                 scope.mute = angularPlayer.getMuteStatus();
+                scope.muteBtn = (scope.mute) ? soundManager.unmuteBtn : soundManager.muteBtn;
                 scope.$on('music:mute', function (event, data) {
                     scope.$apply(function () {
                         scope.mute = data;
+                        scope.muteBtn = (scope.mute) ? soundManager.unmuteBtn : soundManager.muteBtn;
                     });
                 });
 

@@ -334,6 +334,9 @@ c){g.push("<a ");h.isDefined(b)&&g.push('target="',b,'" ');g.push('href="',a.rep
 //# sourceMappingURL=angular-sanitize.min.js.map
 
 ;
+!function(a,b){"function"==typeof define&&define.amd?define([],function(){return a.svg4everybody=b()}):"object"==typeof exports?module.exports=b():a.svg4everybody=b()}(this,function(){/*! svg4everybody v2.0.0 | github.com/jonathantneal/svg4everybody */
+function a(a,b){if(b){var c=!a.getAttribute("viewBox")&&b.getAttribute("viewBox"),d=document.createDocumentFragment(),e=b.cloneNode(!0);for(c&&a.setAttribute("viewBox",c);e.childNodes.length;)d.appendChild(e.firstChild);a.appendChild(d)}}function b(b){b.onreadystatechange=function(){if(4===b.readyState){var c=document.createElement("x");c.innerHTML=b.responseText,b.s.splice(0).map(function(b){a(b[0],c.querySelector("#"+b[1].replace(/(\W)/g,"\\$1")))})}},b.onreadystatechange()}function c(c){function d(){for(var c;c=e[0];){var j=c.parentNode;if(j&&/svg/i.test(j.nodeName)){var k=c.getAttribute("xlink:href");if(f&&(!g||g(k,j,c))){var l=k.split("#"),m=l[0],n=l[1];if(j.removeChild(c),m.length){var o=i[m]=i[m]||new XMLHttpRequest;o.s||(o.s=[],o.open("GET",m),o.send()),o.s.push([j,n]),b(o)}else a(j,document.getElementById(n))}}}h(d,17)}c=c||{};var e=document.getElementsByTagName("use"),f="polyfill"in c?c.polyfill:/\bEdge\/12\b|\bTrident\/[567]\b|\bVersion\/7.0 Safari\b/.test(navigator.userAgent)||(navigator.userAgent.match(/AppleWebKit\/(\d+)/)||[])[1]<537,g=c.validate,h=window.requestAnimationFrame||setTimeout,i={};f&&d()}return c});
+;
 /** @license
  *
  * SoundManager 2: JavaScript Sound for the Web
@@ -505,6 +508,8 @@ c){g.push("<a ");h.isDefined(b)&&g.push('target="',b,'" ');g.push('href="',a.rep
         this.sounds = {};
         this.soundIDs = [];
         this.muted = false;
+        this.muteBtn = '<svg class="icon icon-volume-mute"><use xlink:href="assets/icons.svg#icon-volume-mute"></use></svg>';
+        this.unmuteBtn = '<svg class="icon icon-volume-high"><use xlink:href="assets/icons.svg#icon-volume-high"></use></svg>';
         this.didFlashBlock = false;
         this.filePattern = null;
         this.filePatterns = {
@@ -5349,9 +5354,11 @@ ngSoundManager.directive('muteMusic', ['angularPlayer', function (angularPlayer)
                 });
 
                 scope.mute = angularPlayer.getMuteStatus();
+                scope.muteBtn = (scope.mute) ? soundManager.unmuteBtn : soundManager.muteBtn;
                 scope.$on('music:mute', function (event, data) {
                     scope.$apply(function () {
                         scope.mute = data;
+                        scope.muteBtn = (scope.mute) ? soundManager.unmuteBtn : soundManager.muteBtn;
                     });
                 });
 
@@ -5551,17 +5558,30 @@ var slug = function(str) {
 
 //----------------------
 
+svg4everybody();
+
+//----------------------
+
 var main = {
 	listHeight: function(){
-
 		var windowHeight = parseInt($(window).height());
 		$('aside, section').css('height', windowHeight - 145);
-
+	},
+	events: function(){
+		$(document).on({
+			mouseenter: function () {
+				$(this).find('button').show();
+			},
+			mouseleave: function () {
+				$(this).find('button').hide();
+			}
+		}, 'aside li');
 	}
 };
 
 $(function(){
 	main.listHeight();
+	main.events();
 });
 
 $(window).resize(function(){
@@ -5627,7 +5647,7 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			podcastsPlaylist.setCurrent($scope.feed.q.url);
 			resetChecked();
 			$location.url('/' +  $scope.feed.q.slug);
-
+			$scope.addRss = false;
 		});
 	};
 
@@ -5681,11 +5701,52 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 
 	checkCurrentPodcastOnLoad.getMessages($scope.podcastsList).then(getFeed);
 
+	//-------------------------------------
+
+	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
+
+	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
+
+	$scope.addRss = ($scope.podcastsList.length) ? false: true;
+
+	var toggleAddrssBtnFn = function(){
+		$scope.toggleAddrssBtn = ($scope.addRss) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
+	}
+	toggleAddrssBtnFn();
+
+	$scope.toggleAddrss = function(){
+		$scope.addRss = ($scope.addRss) ? false : true;
+		toggleAddrssBtnFn();
+	}
+
+	//-------------------------------------
+
+	// $scope.listrss = true;
+
+	// $scope.toggleListrssBtnMore = '<svg class="icon icon-bottom"><use xlink:href="assets/icons.svg#icon-bottom"></use></svg>';
+
+	// $scope.toggleListrssBtnLess = '<svg class="icon icon-top"><use xlink:href="assets/icons.svg#icon-top"></use></svg>';
+
+	// var toggleListrssBtnFn = function(){
+	// 	$scope.toggleListrssBtn = ($scope.listrss) ? $scope.toggleListrssBtnMore : $scope.toggleListrssBtnLess;
+	// 	$scope.allListrss = ($scope.listrss) ? false : true;
+	// }
+	// toggleListrssBtnFn();
+
+	// $scope.toggleListrss = function(){
+	// 	$scope.listrss = ($scope.listrss) ? false : true;
+	// 	toggleListrssBtnFn();
+	// }
+
+	// $scope.isListrssMore = function(){
+	// 	return ($scope.podcastsList.length > 4 && !$scope.addRss) ? true : false;
+	// };
+
 }]);
 ;
 podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer){
 
-	$scope.currentPodcastText = 'current';
+	$scope.currentPodcastText = '<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>';
 	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
 

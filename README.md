@@ -21,7 +21,16 @@ Web Podcast player
 
 ## Go to prod
 
-* grunt prod
+	grunt prod
 
 ## TODO
-- UI
+- Add service to handle input rss box toggle display
+- Debug add to Playlist check by ID -> check by slug
+- current on top of loop filter
+- playlist trim on one line + ...
+
+### Next version
+- Rewind 15 secs
+- localStorage for playlist
+- Replace localStorage by firebase
+- Add account

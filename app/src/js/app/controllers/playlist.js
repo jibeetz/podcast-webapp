@@ -1,6 +1,6 @@
 podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer){
 
-	$scope.currentPodcastText = 'current';
+	$scope.currentPodcastText = '<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>';
 	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
 

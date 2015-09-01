@@ -1,9 +1,14 @@
-<form ng-submit="checkFeed()">
-	<input type="text" placeholder="RSS Feed" ng-model="inputRssFeed.url">
-	<input type="submit" value="Load RSS">
-</form>
+<button ng-click="toggleAddrss()" class="toggle-addrss-btn" ng-bind-html="toggleAddrssBtn">
+</button>
 
-<div class="checked-info">
-	<div class="checked-title">{{checkedFeed.title}}</div>
-	<div class="checked-author">{{checkedFeed.author}}</div>
+<div class="add-rss" ng-show="addRss">
+	<form ng-submit="checkFeed()">
+		<input type="text" placeholder="RSS Feed" ng-model="inputRssFeed.url">
+		<input type="submit" value="Load RSS">
+	</form>
+
+	<div class="checked-info">
+		<div class="checked-title">{{checkedFeed.title}}</div>
+		<div class="checked-author">{{checkedFeed.author}}</div>
+	</div>
 </div>

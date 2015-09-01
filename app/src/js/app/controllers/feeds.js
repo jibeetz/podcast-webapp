@@ -38,7 +38,7 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			podcastsPlaylist.setCurrent($scope.feed.q.url);
 			resetChecked();
 			$location.url('/' +  $scope.feed.q.slug);
-
+			$scope.addRss = false;
 		});
 	};
 

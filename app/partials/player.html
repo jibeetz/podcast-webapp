@@ -1,34 +1,56 @@
-<div class="controls" ng-show="currentPlaying.url.length">
-	<button play-pause-toggle data-play="Play!" data-pause="Pause!">Play Toggle</button>
-	<button stop-music>Stop</button>
-</div>
-
-<div class="volume">
-	<button music-volume data-type="increase">+</button>
-	<button music-volume data-type="decrease">-</button>
-	<button mute-music>Mute ({{mute}})</button> volume: {{volume}}
-	<div volume-bar style="height: 10px; background: gray" ng-class="{'active': mute}">
-		<div style="background:red; height: 10px" ng-style="{width : ( volume-bar + '%' ) }"></div>
+<div class="control-sound">
+	<div class="controls">
+		<button class="play" play-music ng-class="{'active': isPlaying}">
+			<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>
+		</button>
+		<button class="pause" pause-music ng-class="{'active': !isPlaying}">
+			<svg class="icon icon-pause"><use xlink:href="assets/icons.svg#icon-pause"></use></svg>
+		</button>
+		<button class="stop" stop-music ng-class="{'active': !isPlaying}">
+			<svg class="icon icon-stop">
+				<use xlink:href="assets/icons.svg#icon-stop"></use>
+			</svg>
+		</button>
 	</div>
-	volumebar: {{volume-bar}}
+
+	<div class="volume">
+		<button class="mute" mute-music ng-bind-html="muteBtn"></button>
+		<button class="decrease" music-volume data-type="decrease">
+			<svg class="icon icon-volume-decrease"><use xlink:href="assets/icons.svg#icon-volume-decrease"></use></svg>
+		</button>
+		<div volume-bar class="volume-bar" ng-class="{'active': mute}">
+			<div class="volume-bar-playing" ng-style="{width : (volume-bar + '%' )}"></div>
+		</div>
+		<button class="increase" music-volume data-type="increase">
+			<svg class="icon icon-volume-increase"><use xlink:href="assets/icons.svg#icon-volume-increase"></use></svg>
+		</button>
+	</div>
+
 </div>
 
 <div class="info-show" ng-show="currentPlaying.url.length">
-	<div class="seekBase" seek-track>
-		<div class="seekLoad" ng-style="{width : ( progress + '%' ) }"></div>
+	<div class="current-title">{{currentPlaying.title}}</div>
+	<div class="control-bar">
+		<div class="current-position">{{currentPostion}}</div>
+		<div class="seekBase" seek-track>
+			<div class="seekLoad" ng-style="{width : (progress + '%')}"></div>
+		</div>
+		<div class="current-duration">{{currentDuration}}</div>
 	</div>
-	{{currentPlaying.title}} by {{currentPlaying.artist}} - {{currentPostion}} / {{currentDuration}}
 </div>
 
 <div class="playlist">
-	<button clear-playlist ng-show="currentPlaying.url.length">Clear Playlist</button>
 	<ul>
 		<li ng-repeat="song in playlist">
-			<a play-from-playlist="song">{{song.title}} - {{song.author}}</a>
-			<a remove-from-playlist="song" data-index="{{$index}}">
-				<small>(remove)</small>
+			<span class="playlist-current" ng-if="currentPlaying.id == song.id">
+				<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>
+			</span>
+			<a class="remove-from-playlist" remove-from-playlist="song" data-index="{{$index}}">
+				<svg class="icon icon-close">
+					<use xlink:href="assets/icons.svg#icon-close"></use>
+				</svg>
 			</a>
-			<span ng-if="currentPlaying.id == song.id">- (current)</span>
+			<a play-from-playlist="song">{{song.title}} - {{song.author}}</a>
 		</li>
 	</ul>
 </div>

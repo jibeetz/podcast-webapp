@@ -2,13 +2,23 @@
 
 <p class="date">{{podcast.date | date:'dd/MM/yyyy'}} - Duration: {{podcast.duration}}</p>
 <p>
-<a href="{{podcast.link}}" target="_blank">Source article</a>
+<a href="{{podcast.link}}" target="_blank">Source</a>
 - <a href="{{podcast.url}}" target="_blank" class="source">Download</a>
 </p>
 
 <div ng-bind-html="podcast.description"></div>
 
-<p>
-	<button music-player="play" add-song="podcast">play</button>
-	<button music-player add-song="podcast">+</button>
+<p class="details-actions">
+	<button music-player="play" add-song="podcast">
+		<svg class="icon icon-play">
+			<use xlink:href="assets/icons.svg#icon-play"></use>
+		</svg>
+		play
+	</button>
+	<button music-player add-song="podcast">
+		<svg class="icon icon-plus">
+			<use xlink:href="assets/icons.svg#icon-plus"></use>
+		</svg>
+		Add to playlist
+	</button>
 </p>

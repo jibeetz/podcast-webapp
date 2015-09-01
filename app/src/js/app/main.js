@@ -31,17 +31,30 @@ var slug = function(str) {
 
 //----------------------
 
+svg4everybody();
+
+//----------------------
+
 var main = {
 	listHeight: function(){
-
 		var windowHeight = parseInt($(window).height());
 		$('aside, section').css('height', windowHeight - 145);
-
+	},
+	events: function(){
+		$(document).on({
+			mouseenter: function () {
+				$(this).find('button').show();
+			},
+			mouseleave: function () {
+				$(this).find('button').hide();
+			}
+		}, 'aside li');
 	}
 };
 
 $(function(){
 	main.listHeight();
+	main.events();
 });
 
 $(window).resize(function(){

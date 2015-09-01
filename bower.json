@@ -23,6 +23,7 @@
     "angular": "~1.4.4",
     "jquery": "~2.1.4",
     "angular-route": "~1.4.4",
-    "angular-sanitize": "~1.4.4"
+    "angular-sanitize": "~1.4.4",
+    "svg4everybody": "https://github.com/jonathantneal/svg4everybody.git#2.0.0"
   }
 }

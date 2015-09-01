@@ -4,6 +4,15 @@
 			{{pod.title}}
 			<div class="date">{{pod.date | date:'dd/MM/yyyy'}}</div>
 		</a>
-		<button music-player add-song="pod">+</button> <button music-player="play" add-song="pod">p</button>
+		<button music-player="play" add-song="pod" class="play-song">
+			<svg class="icon icon-play">
+				<use xlink:href="assets/icons.svg#icon-play"></use>
+			</svg>
+		</button>
+		<button music-player add-song="pod" class="add-song">
+			<svg class="icon icon-plus">
+				<use xlink:href="assets/icons.svg#icon-plus"></use>
+			</svg>
+		</button>
 	</li>
 </ul>
