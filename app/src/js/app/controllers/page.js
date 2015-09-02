@@ -1,4 +1,4 @@
-podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', 'pageTitle', 'search', 'podcastsPlaylist', 'getFeedService', 'checkCurrentPodcastOnLoad', function ($scope, $location, $routeParams, pageTitle, search, podcastsPlaylist, getFeedService, checkCurrentPodcastOnLoad){
+podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', 'pageTitle', 'search', 'podcastsPlaylist', 'getFeedService', 'checkCurrentPodcastOnLoad', 'svgService', function ($scope, $location, $routeParams, pageTitle, search, podcastsPlaylist, getFeedService, checkCurrentPodcastOnLoad, svgService){
 
 	$scope.pageTitleDefault = 'Podcast Player';
 	$scope.pageTitle = pageTitle;
@@ -6,6 +6,9 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 	$scope.keyword = search.str;
 	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
+
+	$scope.svgs = svgService.manageData();
+	$scope.svgs = svgService.get();
 
 	$scope.isActive = function (id) {
 		return id == $routeParams.id;
@@ -25,8 +28,5 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 		});
 	};
 
-	checkCurrentPodcastOnLoad.getMessages($scope.podcastsList).then(getFeed);
-
-
-
+	checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
 }]);

@@ -112,7 +112,7 @@ h3 {
   padding: 7px;
   font-size: 1em;
   width: 300px;
-  border: 1px solid #ECECEC;
+  border: none;
   background-color: #F5F6FD;
 }
 a.clear-search {
@@ -171,9 +171,8 @@ a.clear-search:hover {
 #details {
   float: left;
   font-size: 0.9em;
-  padding: 10px 0;
+  padding: 10px 0 0;
   margin-top: 10px;
-  margin-bottom: 15px;
   width: 100%;
   border-top: 1px solid #ECECEC;
 }
@@ -222,7 +221,7 @@ aside li a {
 }
 #list li a.active,
 #list li a:hover {
-  color: #2C434C;
+  color: #ADD4EA;
 }
 #list li:last-child a {
   border-bottom: none;
@@ -238,8 +237,11 @@ aside .date {
   height: 23px;
   text-align: center;
   border: none;
-  background: #1476A0;
-  display: none;
+  background: #F5F6FD;
+}
+.add-song:hover,
+.play-song:hover {
+  background: #BADBEC;
 }
 .play-song {
   top: 6px;
@@ -269,7 +271,7 @@ aside::-webkit-scrollbar-thumb,
 section::-webkit-scrollbar-thumb,
 .playlist ul::-webkit-scrollbar-thumb {
   border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(186, 219, 236, 0.5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 /* Player */
@@ -288,8 +290,8 @@ header > div {
   margin-top: 0;
   padding: 0;
 }
-#input {
-  width: 25%;
+#no-player {
+  padding: 10px;
 }
 .control-sound {
   width: 24%;
@@ -311,12 +313,13 @@ header > div {
   margin-top: 10px;
 }
 #input {
+  width: 25%;
   padding: 0;
   position: relative;
   z-index: 1;
   padding-top: 4px;
-  background: #BADBEC;
-  border: 1px solid #BADBEC;
+  background: #F3F3F3;
+  border: 1px solid #F3F3F3;
 }
 .toggle-addrss-btn {
   padding: 0;
@@ -326,7 +329,7 @@ header > div {
   width: 20px;
   height: 20px;
   border: none;
-  background-color: #DCEFF7;
+  background-color: #F9F9F9;
   text-align: center;
 }
 .toggle-addrss-btn svg,
@@ -363,12 +366,12 @@ header > div {
 #input input[type="submit"] {
   width: 25%;
   border: none;
-  background-color: #DCEFF7;
+  background-color: #F9F9F9;
   color: #0F5471;
 }
 #input ul {
   padding: 0px 10px 10px 13px;
-  background: #BADBEC;
+  background: #F3F3F3;
   margin-left: -1px;
   width: calc(100% + 2px);
   height: 90px;
@@ -398,9 +401,6 @@ header > div {
   height: 10px;
   margin-top: 4px;
   fill: #86BFD8;
-}
-#input ul li .icon-play {
-  fill: #0F5471;
 }
 .current-podcast-text {
   position: absolute;
@@ -519,8 +519,8 @@ header > div {
   border: none;
 }
 .playlist ul {
-  background: #F5F5F5;
-  padding: 5px 5px 10px 15px;
+  /*background: #F5F5F5;*/
+  padding: 10px 5px 10px 15px;
   overflow: hidden;
   height: 98px;
   overflow-y: scroll;
@@ -560,6 +560,9 @@ a.remove-from-playlist svg {
   background: #1476A0;
   color: white;
   padding: 8px 20px;
+}
+.details-actions button:hover {
+  background: #0D5A7B;
 }
 .details-actions button svg {
   fill: white;

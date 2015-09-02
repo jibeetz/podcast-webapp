@@ -54,7 +54,7 @@ var main = {
 
 $(function(){
 	main.listHeight();
-	main.events();
+	// main.events();
 });
 
 $(window).resize(function(){

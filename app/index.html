@@ -26,6 +26,8 @@
 
 		</header>
 
+<!-- {{svgs.d.data}} -->
+
 		<div id="container">
 
 			<section ng-show="feed.q">
@@ -36,8 +38,8 @@
 				<div id="details" ng-view ng-show="!keyword.str.length"></div>
 			</section>
 
-			<aside>
-				<ng-include src="'partials/list.html'" ng-show="feed.q"></ng-include>
+			<aside ng-show="feed.q">
+				<ng-include src="'partials/list.html'"></ng-include>
 			</aside>
 		</div>
 	</body>

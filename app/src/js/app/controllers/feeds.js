@@ -2,6 +2,8 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 
 	$scope.feed = getFeedService.get();
 	$scope.inputRssFeed = {};
+	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false: true);
+	$scope.addRss = inputBox.get();
 
 	$scope.checkFeed = function(){
 
@@ -21,14 +23,11 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 
 	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
 
-	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false: true);
-	$scope.addRss = inputBox.get();
 
 	var toggleAddrssBtnFn = function(){
 		$scope.toggleAddrssBtn = ($scope.addRss.b) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
 	}
 	toggleAddrssBtnFn();
-
 
 	$scope.toggleAddrss = function(){
 		inputBox.set(($scope.addRss.b) ? false : true);

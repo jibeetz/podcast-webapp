@@ -1,6 +1,6 @@
 podcastApp.factory('checkCurrentPodcastOnLoad', ['$q', '$timeout', function($q, $timeout){
 
-	var getMessages = function(podcastsList) {
+	var getCurrent = function(podcastsList) {
 		var deferred = $q.defer();
 
 		var currentPodcastOnLoad;
@@ -16,6 +16,6 @@ podcastApp.factory('checkCurrentPodcastOnLoad', ['$q', '$timeout', function($q, 
 	};
 
 	return {
-		getMessages: getMessages
+		getCurrent: getCurrent
 	};
 }]);
