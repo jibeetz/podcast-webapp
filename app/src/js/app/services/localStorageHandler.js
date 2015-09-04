@@ -1,12 +1,15 @@
-podcastApp.factory('localStorageHandler', [function(){
+podcastApp.factory('localStorageHandler', ['defaultPodcasts', function(defaultPodcasts){
 
 	var podcastsList = [];
 
 	return {
 		getOnLoad: function(){
 
-			if(!this.test() || !localStorage.feeds || localStorage.feeds === undefined || localStorage.feeds === 'undefined')
+			if(!this.test())
 				return podcastsList;
+
+			if(!localStorage.feeds || localStorage.feeds.length <= 2)
+				localStorage.setItem('feeds', angular.toJson(defaultPodcasts.get));
 
 			return JSON.parse(localStorage.feeds);
 		},

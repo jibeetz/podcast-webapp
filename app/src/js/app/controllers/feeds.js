@@ -1,7 +1,8 @@
-podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', function ($scope, $timeout, $location, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox){
+podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '$routeParams', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', 'checkCurrentPodcastOnLoad', function ($scope, $timeout, $location, $routeParams, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox, checkCurrentPodcastOnLoad){
 
 	$scope.feed = getFeedService.get();
 	$scope.inputRssFeed = {};
+	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false: true);
 	$scope.addRss = inputBox.get();
 
@@ -18,6 +19,32 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			}, 500);
 		});
 	};
+
+	var getFeed = function(url){
+
+		if(!url)
+			return;
+
+		getFeedService.set(url).then(function(){
+			pageTitle.setPodcastTitle($scope.feed.q.title);
+			if(!$routeParams.id)
+				$location.url('/' +  $scope.feed.q.slug);
+
+			// console.log($scope.feed);
+		});
+	};
+
+	// if(!$scope.podcastsList.length){
+	// 	defaultPodcasts.get().then(function(res){
+	// 		$scope.podcastsList = res;
+	// 		checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
+	// 	});
+	// 	// console.log($scope.podcastsList);
+	// }else{
+	// 	checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
+	// }
+
+	checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
 
 	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
 

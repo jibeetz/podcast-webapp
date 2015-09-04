@@ -1,4 +1,4 @@
-<ul ng-show="!addRss.b" ng-class="{'all': allListrss}">
+<ul ng-show="!addRss.b">
 	<li ng-repeat="podcastItem in podcastsList | currentOnTop:'current'">
 		<span class="current-podcast-text" ng-show="podcastItem.current" ng-bind-html="currentPodcastText"></span>
 		<a href="#" ng-click="playFeed(podcastItem.url);">{{podcastItem.title}}</a>
@@ -10,6 +10,3 @@
 	</li>
 	<li ng-show="!podcastsList.length">no shows added</li>
 </ul>
-
-<button ng-click="toggleListrss()" class="toggle-listrss-btn" ng-bind-html="toggleListrssBtn" ng-show="isListrssMore()">
-</button>

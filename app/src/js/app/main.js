@@ -38,7 +38,7 @@ svg4everybody();
 var main = {
 	listHeight: function(){
 		var windowHeight = parseInt($(window).height());
-		$('aside, section').css('height', windowHeight - 145);
+		$('aside, section').css('height', windowHeight - 130);
 	},
 	events: function(){
 		$(document).on({

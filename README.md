@@ -29,6 +29,9 @@ Web Podcast player
 - DONE current on top of loop filter
 - DONE playlist trim on one line + ...
 - DONE playlist toggle
+- DONE Bug play same id
+- DONE Add default shows when none
+- Refactor default shows loading using checkFeed function refactored as a Service
 - Refactor svg in ctrls
 - organize CSS
 

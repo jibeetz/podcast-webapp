@@ -1,10 +1,9 @@
-podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams', 'pageTitle', 'search', 'podcastsPlaylist', 'getFeedService', 'checkCurrentPodcastOnLoad', 'svgService', function ($scope, $location, $routeParams, pageTitle, search, podcastsPlaylist, getFeedService, checkCurrentPodcastOnLoad, svgService){
+podcastControllers.controller('pageCtrl', ['$scope', '$routeParams', 'pageTitle', 'search', 'getFeedService', 'svgService', function ($scope, $routeParams, pageTitle, search, getFeedService, svgService){
 
 	$scope.pageTitleDefault = 'Podcast Player';
 	$scope.pageTitle = pageTitle;
 	pageTitle.setPodcastTitle($scope.pageTitleDefault);
 	$scope.keyword = search.str;
-	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
 
 	$scope.svgs = svgService.manageData();
@@ -14,19 +13,4 @@ podcastControllers.controller('pageCtrl', ['$scope', '$location', '$routeParams'
 		return id == $routeParams.id;
 	};
 
-	var getFeed = function(url){
-
-		if(!url)
-			return;
-
-		getFeedService.set(url).then(function(){
-			pageTitle.setPodcastTitle($scope.feed.q.title);
-			if(!$routeParams.id)
-				$location.url('/' +  $scope.feed.q.slug);
-
-			// console.log($scope.feed);
-		});
-	};
-
-	checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
 }]);

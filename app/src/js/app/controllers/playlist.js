@@ -41,25 +41,4 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 
 		}
 	};
-
-	$scope.listrss = true;
-
-	$scope.toggleListrssBtnMore = '<svg class="icon icon-bottom"><use xlink:href="assets/icons.svg#icon-bottom"></use></svg>';
-
-	$scope.toggleListrssBtnLess = '<svg class="icon icon-top"><use xlink:href="assets/icons.svg#icon-top"></use></svg>';
-
-	var toggleListrssBtnFn = function(){
-		$scope.toggleListrssBtn = ($scope.listrss) ? $scope.toggleListrssBtnMore : $scope.toggleListrssBtnLess;
-		$scope.allListrss = ($scope.listrss) ? false : true;
-	}
-	toggleListrssBtnFn();
-
-	$scope.toggleListrss = function(){
-		$scope.listrss = ($scope.listrss) ? false : true;
-		toggleListrssBtnFn();
-	}
-
-	$scope.isListrssMore = function(){
-		return ($scope.podcastsList.length > 4 && !$scope.addRss.b) ? true : false;
-	};
 }]);

@@ -49,7 +49,7 @@ p {
   padding: 0;
 }
 body {
-  background: #EFEFEF;
+  background: #EAEFF1;
   font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
   color: #5F5F5F;
 }
@@ -113,7 +113,7 @@ h3 {
   font-size: 1em;
   width: 300px;
   border: none;
-  background-color: #F5F6FD;
+  background-color: #EAEFF1;
 }
 a.clear-search {
   background: #48598E;
@@ -213,11 +213,12 @@ aside li {
 }
 aside li a {
   display: block;
-  padding: 13px 5px;
+  padding: 5px;
   border-bottom: 1px solid #ECECEC;
   background: #FFF;
   padding-right: 30px;
   line-height: 1.4;
+  min-height: 60px;
 }
 #list li a.active,
 #list li a:hover {
@@ -237,14 +238,14 @@ aside .date {
   height: 23px;
   text-align: center;
   border: none;
-  background: #F5F6FD;
+  background: #EAEFF1;
 }
 .add-song:hover,
 .play-song:hover {
   background: #BADBEC;
 }
 .play-song {
-  top: 6px;
+  top: 5px;
 }
 .add-song {
   top: 32px;
@@ -263,32 +264,32 @@ aside .date {
 }
 aside::-webkit-scrollbar,
 section::-webkit-scrollbar,
-.playlist ul::-webkit-scrollbar {
+.playlist ul::-webkit-scrollbar,
+#input ul::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
 }
 aside::-webkit-scrollbar-thumb,
 section::-webkit-scrollbar-thumb,
-.playlist ul::-webkit-scrollbar-thumb {
+.playlist ul::-webkit-scrollbar-thumb,
+#input ul::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background-color: rgba(186, 219, 236, 0.5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 /* Player */
+header {
+  background: #fff;
+}
 header > div {
-  background-color: #FFF;
-  border: 1px solid #EFEFEF;
-  padding: 10px;
-  border-radius: 2px;
-  margin: 15px;
   height: 100px;
 }
 #player,
 #no-player {
-  width: calc(75% - 45px);
+  width: calc(75% - 30px);
   float: right;
   margin-top: 0;
-  padding: 0;
+  padding: 0 0 0 5px;
 }
 #no-player {
   padding: 10px;
@@ -313,24 +314,24 @@ header > div {
   margin-top: 10px;
 }
 #input {
-  width: 25%;
-  padding: 0;
+  width: calc(25% + 15px);
+  padding: 0 0 0 25px;
   position: relative;
   z-index: 1;
-  padding-top: 4px;
-  background: #F3F3F3;
-  border: 1px solid #F3F3F3;
+  padding-top: 5px;
+  background: #FFF;
 }
 .toggle-addrss-btn {
   padding: 0;
   position: absolute;
-  right: -1px;
-  top: -1px;
+  left: 0;
+  top: 0;
   width: 20px;
   height: 20px;
   border: none;
-  background-color: #F9F9F9;
+  background-color: #1476A0;
   text-align: center;
+  border-radius: 0 0 2px 0;
 }
 .toggle-addrss-btn svg,
 .toggle-listrss-btn svg {
@@ -338,7 +339,7 @@ header > div {
   height: 8px;
   display: block;
   margin: auto;
-  fill: #0F5471;
+  fill: #fff;
 }
 .toggle-listrss-btn {
   padding: 0;
@@ -352,31 +353,32 @@ header > div {
   text-align: center;
 }
 #input form {
-  padding: 5px 10px 0px;
+  padding: 5px 10px;
 }
 #input input[type="text"],
 #input input[type="submit"] {
   padding: 5px;
+  background: #EAEFF1;
 }
 #input input[type="text"] {
-  width: 67%;
+  width: 73%;
   padding: 5px;
   border: none;
 }
 #input input[type="submit"] {
   width: 25%;
   border: none;
-  background-color: #F9F9F9;
-  color: #0F5471;
+  background-color: #1476A0;
+  color: #fff;
 }
 #input ul {
-  padding: 0px 10px 10px 13px;
-  background: #F3F3F3;
-  margin-left: -1px;
-  width: calc(100% + 2px);
-  height: 90px;
-  overflow: hidden;
+  padding: 0px 0 5px 15px;
+  background: #FFF;
+  margin-right: 5px;
+  height: 95px;
+  overflow-y: scroll;
   border-radius: 2px;
+  width: 100%;
 }
 #input ul.all {
   height: auto;
@@ -386,7 +388,7 @@ header > div {
   display: block;
   padding: 0.1em 5px;
   position: relative;
-  margin-right: 15px;
+  margin-right: 0;
 }
 #input ul li .remove-podcast {
   float: right;
@@ -520,14 +522,14 @@ header > div {
 }
 .playlist ul {
   /*background: #F5F5F5;*/
-  padding: 10px 5px 10px 15px;
+  padding: 10px 5px 0px 15px;
   overflow: hidden;
   height: 98px;
   overflow-y: scroll;
 }
 .playlist li {
   position: relative;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 }
 .playlist a {
   cursor: pointer;
@@ -579,5 +581,5 @@ a.remove-from-playlist svg {
 }
 .checked-info {
   font-size: 0.8em;
-  padding: 12px 15px;
+  padding: 7px 15px;
 }
