@@ -9,6 +9,9 @@ podcastApp.factory('svgService', ['$http', function($http){
 		manageData: function(){
 			this.getSvgs().then(function(data){
 				svgObj.d = data;
+				json = X2J.parseXml(svgObj.d.data),
+				// console.log(json);
+
 			});
 		},
 		get: function(){
