@@ -1,10 +1,20 @@
-podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '$routeParams', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', 'checkCurrentPodcastOnLoad', function ($scope, $timeout, $location, $routeParams, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox, checkCurrentPodcastOnLoad){
+podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '$routeParams', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', 'checkCurrentPodcastOnLoad', 'defaultPodcasts', function ($scope, $timeout, $location, $routeParams, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox, checkCurrentPodcastOnLoad, defaultPodcasts){
 
 	$scope.feed = getFeedService.get();
 	$scope.inputRssFeed = {};
 	$scope.podcastsList = podcastsPlaylist.get();
-	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false: true);
+	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false : true);
 	$scope.addRss = inputBox.get();
+
+	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
+
+	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
+
+
+	var toggleAddrssBtnFn = function(){
+		$scope.toggleAddrssBtn = ($scope.addRss.b) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
+	}
+	toggleAddrssBtnFn();
 
 	$scope.checkFeed = function(){
 
@@ -16,7 +26,7 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 
 			$timeout(function() {
 				savePlayFeed($scope.inputRssFeed.url);
-			}, 500);
+			}, 200);
 		});
 	};
 
@@ -34,27 +44,27 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 		});
 	};
 
-	// if(!$scope.podcastsList.length){
-	// 	defaultPodcasts.get().then(function(res){
-	// 		$scope.podcastsList = res;
-	// 		checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
-	// 	});
-	// 	// console.log($scope.podcastsList);
-	// }else{
-	// 	checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
-	// }
+	if(!$scope.podcastsList.length){
+		$scope.defaultPodcasts = defaultPodcasts.get;
+		angular.forEach($scope.defaultPodcasts, function(value, key) {
+			rssService.getRssFeed(value.url).then(function(res){
+				var defaultPodcast = checkFeedService.check(res, value.url);
+				if(key === 0)
+					$scope.launchOnload = true;
 
-	checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
+				defaultPodcast.current = value.current;
+				podcastsPlaylist.set(defaultPodcast);
+			});
+		});
 
-	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
-
-	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
-
-
-	var toggleAddrssBtnFn = function(){
-		$scope.toggleAddrssBtn = ($scope.addRss.b) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
+		inputBox.set(false);
+		toggleAddrssBtnFn();
 	}
-	toggleAddrssBtnFn();
+
+	$scope.$watch('launchOnload', function() {
+		if($scope.podcastsList.length)
+			checkCurrentPodcastOnLoad.getCurrent($scope.podcastsList).then(getFeed);
+	});
 
 	$scope.toggleAddrss = function(){
 		inputBox.set(($scope.addRss.b) ? false : true);

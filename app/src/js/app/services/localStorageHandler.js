@@ -1,4 +1,4 @@
-podcastApp.factory('localStorageHandler', ['defaultPodcasts', function(defaultPodcasts){
+podcastApp.factory('localStorageHandler', ['defaultPodcasts', 'checkFeedService', 'rssService', function(defaultPodcasts, checkFeedService, rssService){
 
 	var podcastsList = [];
 
@@ -9,7 +9,7 @@ podcastApp.factory('localStorageHandler', ['defaultPodcasts', function(defaultPo
 				return podcastsList;
 
 			if(!localStorage.feeds || localStorage.feeds.length <= 2)
-				localStorage.setItem('feeds', angular.toJson(defaultPodcasts.get));
+				return podcastsList;
 
 			return JSON.parse(localStorage.feeds);
 		},

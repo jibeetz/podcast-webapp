@@ -1,6 +1,7 @@
 podcastApp.factory('checkCurrentPodcastOnLoad', ['$q', '$timeout', function($q, $timeout){
 
 	var getCurrent = function(podcastsList) {
+		console.log('getcurrent');
 		var deferred = $q.defer();
 
 		var currentPodcastOnLoad;
