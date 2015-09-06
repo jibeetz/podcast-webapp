@@ -32,7 +32,7 @@ Web Podcast player
 - DONE Bug play same id
 - DONE Add default shows when none
 - DONE Refactor default shows loading using checkFeed function refactored as a Service
-- organize CSS
+- DONE organize CSS
 - DONE Refactor svg in ctrls
 
 ### Next version

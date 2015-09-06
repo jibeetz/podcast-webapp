@@ -1,9 +1,27 @@
 @import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600|Kreon);
 
+@borderColor: #ECECEC;
+@bodyColor: #EAEFF1;
+@firstColor: #1476A0;
+@secondColor: @bodyColor;
+@variantColor: #95C3D6;
+@AltColor: #fff;
+@cardColor: #fff;
+@borderRadius: 2px;
+@fontFamily: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+
 .placeholder{
 	color: #5F5F5F;
-	font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+	font-family: @fontFamily;
 	line-height: 1.3em;
+}
+
+.card {
+	background-color: @cardColor;
+	border: 1px solid @borderColor;
+	padding: 10px;
+	border-radius: @borderRadius;
+	margin: 15px;
 }
 
 ::-webkit-input-placeholder {
@@ -22,12 +40,14 @@
 	.placeholder;
 }
 
-.card {
-	background-color: #FFF;
-	border: 1px solid #EFEFEF;
-	padding: 10px;
-	border-radius: 2px;
-	margin: 15px;
+aside::-webkit-scrollbar, section::-webkit-scrollbar, .playlist ul::-webkit-scrollbar, #input ul::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 7px;
+}
+aside::-webkit-scrollbar-thumb, section::-webkit-scrollbar-thumb, .playlist ul::-webkit-scrollbar-thumb, #input ul::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+	background-color: rgba(186, 219, 236, .5);
+	-webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 
 *{
@@ -43,13 +63,13 @@ html, body, ul, li, h1, p{
 }
 
 body{
-	background: #EAEFF1;
-	font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+	background: @bodyColor;
+	font-family: @fontFamily;
 	color: #5F5F5F;
 }
 
 a{
-	color: #1476A0;
+	color: @firstColor;
 	text-decoration: none;
 }
 
@@ -62,14 +82,14 @@ li{
 }
 
 button, input[type="submit"]{
-	border-radius: 2px;
-	border: 1px solid #CCC;
+	border-radius: @borderRadius;
+	border: none;
 	background-color: white;
 	cursor: pointer;
 }
 
 button svg{
-	fill: #1476A0;
+	fill: @firstColor;
 }
 
 section{
@@ -77,6 +97,7 @@ section{
 	width: ~"calc(75% - 45px)";
 	.card;
 	padding-right: 5px;
+	padding-bottom: 0;
 	margin-top	: 0;
 	overflow: scroll;
 }
@@ -112,7 +133,7 @@ h3{
 	font-size: 1em;
 	width: 300px;
 	border: none;
-	background-color: #EAEFF1;
+	background-color: @secondColor;
 }
 
 a.clear-search{
@@ -141,7 +162,7 @@ a.clear-search:hover{
 
 	font-size: 0.9em;
 	padding-bottom: 15px;
-	border-bottom: 1px solid #ECECEC;
+	border-bottom: 1px solid @borderColor;
 	margin-bottom: 15px;
 }
 
@@ -178,6 +199,11 @@ a.clear-search:hover{
 	padding: 0 1px;
 }
 
+.keywords{
+	font-size: 0.9em;
+	margin-top: 10px;
+}
+
 /* Details */
 
 #details{
@@ -186,7 +212,7 @@ a.clear-search:hover{
 	padding: 10px 0 0;
 	margin-top: 10px;
 	width: 100%;
-	border-top: 1px solid #ECECEC;
+	border-top: 1px solid @borderColor;
 }
 
 .sub-author{
@@ -208,7 +234,7 @@ a.clear-search:hover{
 	float: right;
 	width: 150px;
 	margin: 0 0 10px 15px;
-	border: 1px solid #ECECEC;
+	border: 1px solid @borderColor;
 }
 
 /* List */
@@ -229,7 +255,7 @@ aside li{
 aside li a{
 	display: block;
 	padding: 5px;
-	border-bottom: 1px solid #ECECEC;
+	border-bottom: 1px solid @borderColor;
 	background: #FFF;
 	padding-right: 30px;
 	line-height: 1.4;
@@ -255,7 +281,7 @@ aside .date{
 	height: 23px;
 	text-align: center;
 	border: none;
-	background: #EAEFF1;
+	background: @secondColor;
 }
 
 .add-song:hover, .play-song:hover{
@@ -282,16 +308,6 @@ aside .date{
 #list .add-song .icon{
 	height: 8px;
 	width: 8px;
-}
-
-aside::-webkit-scrollbar, section::-webkit-scrollbar, .playlist ul::-webkit-scrollbar, #input ul::-webkit-scrollbar {
-	-webkit-appearance: none;
-	width: 7px;
-}
-aside::-webkit-scrollbar-thumb, section::-webkit-scrollbar-thumb, .playlist ul::-webkit-scrollbar-thumb, #input ul::-webkit-scrollbar-thumb {
-	border-radius: 4px;
-	background-color: rgba(186, 219, 236, .5);
-	-webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 
 /* Player */
@@ -332,114 +348,6 @@ header > div{
 	padding-top: 10px;
 }
 
-.keywords{
-	font-size: 0.9em;
-	margin-top: 10px;
-}
-
-#input{
-	width: ~"calc(25% + 15px)";
-	padding: 0 0 0 25px;
-	position: relative;
-	z-index: 1;
-	padding-top: 5px;
-	background: #FFF;
-}
-
-.toggle-addrss-btn{
-	padding: 0;
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 20px;
-	height: 20px;
-	border: none;
-	background-color: #1476A0;
-	text-align: center;
-	border-radius: 0 0 2px 0;
-}
-
-.toggle-addrss-btn svg, .toggle-listrss-btn svg{
-	width: 8px;
-	height: 8px;
-	display: block;
-	margin: auto;
-	fill: #fff;
-}
-
-.toggle-listrss-btn{
-	padding: 0;
-	position: absolute;
-	right: -1px;
-	bottom: -1px;
-	width: 20px;
-	height: 20px;
-	border: none;
-	background-color: #DCEFF7;
-	text-align: center;
-}
-
-#input form{
-	padding: 5px 10px;
-}
-
-#input input[type="text"], #input input[type="submit"]{
-	padding: 5px;
-	background: #EAEFF1;
-}
-
-#input input[type="text"]{
-	width: 73%;
-	padding: 5px;
-	border: none;
-}
-
-#input input[type="submit"]{
-	width: 25%;
-	border: none;
-	background-color: #1476A0;
-	color: #fff;
-}
-
-#input ul{
-	padding: 0px 0 5px 15px;
-	background: #FFF;
-	margin-right: 5px;
-	height: 95px;
-	overflow-y: scroll;
-	border-radius: 2px;
-	width: 100%;
-}
-
-#input ul.all{
-	height: auto;
-}
-
-#input ul li{
-	font-size: 0.8em;
-	display: block;
-	padding: 0.1em 5px;
-	position: relative;
-	margin-right: 0;
-}
-
-#input ul li .remove-podcast{
-	float: right;
-	margin-right: 0;
-}
-
-#input ul li button{
-	border: none;
-	background: none;
-}
-
-#input ul li .icon{
-	width: 10px;
-	height: 10px;
-	margin-top: 4px;
-	fill: #86BFD8;
-}
-
 .current-podcast-text{
 	position: absolute;
 	left: -8px;
@@ -467,7 +375,7 @@ header > div{
 }
 
 .controls button.active svg{
-	fill: #95C3D6;
+	fill: @variantColor;
 }
 
 .volume{
@@ -500,7 +408,7 @@ header > div{
 	width: ~"calc(100% - 65px)";
 	height: 5px;
 	vertical-align: middle;
-	background-color: #95C3D6;
+	background-color: @variantColor;
 	margin-right: 5px;
 	cursor: pointer;
 	margin-top: 5px;
@@ -538,14 +446,14 @@ header > div{
 	font-size: 0.7em;
 	height: 7px;
 	width: ~"calc(100% - 90px)";
-	background: #95C3D6;
+	background: @variantColor;
 	margin-top: 8px;
 }
 
 .seekLoad {
 	height: 7px;
 	width: 0;
-	background-color: #0F5471;
+	background-color: @firstColor;
 }
 
 .control-bar{
@@ -556,6 +464,8 @@ header > div{
 	padding-right: 20px;
 
 }
+
+/* Playlist */
 
 .playlist{
 	width: 36%;
@@ -602,7 +512,7 @@ header > div{
 }
 
 .playlist-current svg{
-	fill: #0F5471;
+	fill: @firstColor;
 }
 
 a.remove-from-playlist{
@@ -614,12 +524,14 @@ a.remove-from-playlist{
 }
 
 a.remove-from-playlist svg{
-	fill: #1476A0;
+	fill: @firstColor;
 }
+
+/* Podcast Details */
 
 .details-actions button{
 	border: none;
-	background: #1476A0;
+	background: @firstColor;
 	color: white;
 	padding: 8px 20px;
 }
@@ -642,6 +554,99 @@ a.remove-from-playlist svg{
 	fill: white;
 	width: 8px;
 	height: 8px;
+}
+
+/* Input Box */
+
+#input{
+	width: ~"calc(25% + 15px)";
+	padding: 0 0 0 25px;
+	position: relative;
+	z-index: 1;
+	padding-top: 5px;
+	background: @AltColor;
+}
+
+#input form{
+	padding: 5px 10px;
+}
+
+#input ul{
+	padding: 0px 0 5px 15px;
+	background: @AltColor;
+	margin-right: 5px;
+	height: 95px;
+	overflow-y: scroll;
+	border-radius: @borderRadius;
+	width: 100%;
+}
+
+#input ul.all{
+	height: auto;
+}
+
+#input ul li{
+	font-size: 0.8em;
+	display: block;
+	padding: 0.1em 5px;
+	position: relative;
+	margin-right: 0;
+}
+
+#input ul li .remove-podcast{
+	float: right;
+	margin-right: 0;
+}
+
+#input ul li button{
+	border: none;
+	background: none;
+}
+
+#input ul li .icon{
+	width: 10px;
+	height: 10px;
+	margin-top: 4px;
+	fill: #86BFD8;
+}
+
+#input input[type="text"], #input input[type="submit"]{
+	padding: 5px;
+	background: @secondColor;
+}
+
+#input input[type="text"]{
+	width: 73%;
+	padding: 5px;
+	border: none;
+}
+
+#input input[type="submit"]{
+	width: 25%;
+	border: none;
+	background-color: @firstColor;
+	color: #fff;
+}
+
+.toggle-addrss-btn{
+	padding: 0;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 20px;
+	height: 20px;
+	border: none;
+	background-color: @firstColor;
+	text-align: center;
+	border-radius: 0 0 @borderRadius 0;
+}
+
+.toggle-addrss-btn svg{
+	width: 8px;
+	height: 8px;
+	display: block;
+	margin: auto;
+	fill: #fff;
 }
 
 .checked-info{
