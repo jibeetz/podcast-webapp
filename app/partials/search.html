@@ -7,9 +7,15 @@
 		<li ng-repeat="pod in (filteredList = (searchFeed.item | filter:keyword.str))">
 			<a ng-href="#/{{searchFeed.slug}}/{{pod.id}}/{{pod.route}}" ng-click="clearSearchToTop()" class="title" ng-bind-html="pod.title | highlight:keyword.str"></a>
 			<p class="sub" ng-show="pod.subtitle.length" ng-bind-html="pod.subtitle | highlight:keyword.str"></p>
-			<p class="date"><span ng-bind-html="pod.date | date:'dd/MM/yyyy' | highlight:keyword.str"></span> <span ng-show="pod.duration.length" ng-bind-html="' - ' + pod.duration | highlight:keyword.str"></span></p>
+			<p class="date">
+				<span ng-bind-html="pod.date | date:'dd/MM/yyyy' | highlight:keyword.str"></span>
+				<span ng-show="pod.duration.length" ng-bind-html="' - ' + pod.duration | highlight:keyword.str"></span>
+			</p>
 			<p class="description" ng-bind-html="pod.description | highlight:keyword.str"></p>
-			<p class="keywords" ng-show="pod.keywords.length">Keywords: <span ng-bind-html="pod.keywords | highlight:keyword.str"></span></p>
+			<p class="keywords" ng-show="pod.keywords.length">
+				Keywords: 
+				<span ng-bind-html="pod.keywords | highlight:keyword.str"></span>
+			</p>
 		</li>
 	</ul>
 </div>

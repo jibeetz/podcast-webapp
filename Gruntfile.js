@@ -13,6 +13,7 @@ module.exports = function(grunt) {
           'app/src/js/lib/svgtojson.js',
           'app/src/js/app/main.js',
           'app/src/js/app/app.js',
+          'app/src/js/app/directives/svg.js',
           'app/src/js/app/controllers/feeds.js',
           'app/src/js/app/controllers/ng-views.js',
           'app/src/js/app/controllers/page.js',
@@ -23,14 +24,14 @@ module.exports = function(grunt) {
           'app/src/js/app/services/checkCurrentPodcastOnLoad.js',
           'app/src/js/app/services/checkFeed.js',
           'app/src/js/app/services/getFeed.js',
-          'app/src/js/app/services/getUniqueShowService.js',
+          'app/src/js/app/services/getUniqueShow.js',
           'app/src/js/app/services/localStorageHandler.js',
           'app/src/js/app/services/pageTitle.js',
           'app/src/js/app/services/podcastsPlaylist.js',
           'app/src/js/app/services/prepareFeed.js',
           'app/src/js/app/services/searchFeed.js',
           'app/src/js/app/services/defaultPodcasts.js',
-          'app/src/js/app/services/svgService.js'
+          'app/src/js/app/services/svgs.js'
       ]
   };
 

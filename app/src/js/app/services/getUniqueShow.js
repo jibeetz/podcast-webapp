@@ -1,4 +1,4 @@
-podcastApp.factory('getUniqueShowService', [function(){
+podcastApp.factory('getUniqueShow', [function(){
 
 	return {
 		getItem: function(data, id) {

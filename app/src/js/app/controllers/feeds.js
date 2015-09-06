@@ -1,4 +1,4 @@
-podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '$routeParams', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', 'checkCurrentPodcastOnLoad', 'defaultPodcasts', function ($scope, $timeout, $location, $routeParams, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox, checkCurrentPodcastOnLoad, defaultPodcasts){
+podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '$routeParams', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', 'checkCurrentPodcastOnLoad', 'defaultPodcasts', 'svgs', function ($scope, $timeout, $location, $routeParams, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox, checkCurrentPodcastOnLoad, defaultPodcasts, svgs){
 
 	$scope.feed = getFeedService.get();
 	$scope.inputRssFeed = {};
@@ -6,9 +6,8 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 	$scope.addRss = inputBox.set(($scope.podcastsList.length) ? false : true);
 	$scope.addRss = inputBox.get();
 
-	$scope.toggleAddrssAdd = '<svg class="icon icon-plus"><use xlink:href="assets/icons.svg#icon-plus"></use></svg>';
-
-	$scope.toggleAddrssList = '<svg class="icon icon-numbered-list"><use xlink:href="assets/icons.svg#icon-numbered-list"></use></svg>';
+	$scope.toggleAddrssAdd = svgs.get('plus');
+	$scope.toggleAddrssList = svgs.get('numbered-list');
 
 
 	var toggleAddrssBtnFn = function(){

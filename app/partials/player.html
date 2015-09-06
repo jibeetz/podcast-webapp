@@ -1,28 +1,26 @@
 <div class="control-sound">
 	<div class="controls">
 		<button class="play" play-music ng-class="{'active': isPlaying}">
-			<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>
+			<div svg-icon="play"></div>
 		</button>
 		<button class="pause" pause-music ng-class="{'active': !isPlaying}">
-			<svg class="icon icon-pause"><use xlink:href="assets/icons.svg#icon-pause"></use></svg>
+			<div svg-icon="pause"></div>
 		</button>
 		<button class="stop" stop-music ng-class="{'active': !isPlaying}">
-			<svg class="icon icon-stop">
-				<use xlink:href="assets/icons.svg#icon-stop"></use>
-			</svg>
+			<div svg-icon="stop"></div>
 		</button>
 	</div>
 
 	<div class="volume">
 		<button class="mute" mute-music ng-bind-html="muteBtn"></button>
 		<button class="decrease" music-volume data-type="decrease">
-			<svg class="icon icon-volume-decrease"><use xlink:href="assets/icons.svg#icon-volume-decrease"></use></svg>
+			<div svg-icon="volume-decrease"></div>
 		</button>
 		<div volume-bar class="volume-bar" ng-class="{'active': mute}">
 			<div class="volume-bar-playing" ng-style="{width : (volume-bar + '%' )}"></div>
 		</div>
 		<button class="increase" music-volume data-type="increase">
-			<svg class="icon icon-volume-increase"><use xlink:href="assets/icons.svg#icon-volume-increase"></use></svg>
+			<div svg-icon="volume-increase"></div>
 		</button>
 	</div>
 
@@ -43,12 +41,10 @@
 	<ul>
 		<li ng-repeat="song in playlist">
 			<span class="playlist-current" ng-if="currentPlaying.id == song.id">
-				<svg class="icon icon-play"><use xlink:href="assets/icons.svg#icon-play"></use></svg>
+				<div svg-icon="play"></div>
 			</span>
 			<a class="remove-from-playlist" remove-from-playlist="song" data-index="{{$index}}">
-				<svg class="icon icon-close">
-					<use xlink:href="assets/icons.svg#icon-close"></use>
-				</svg>
+				<div svg-icon="close"></div>
 			</a>
 			<a play-from-playlist="song" title="{{song.titleauthor}}">{{song.titleauthor | strLimit: 50}}</a>
 		</li>

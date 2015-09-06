@@ -3,9 +3,7 @@
 		<span class="current-podcast-text" ng-show="podcastItem.current" ng-bind-html="currentPodcastText"></span>
 		<a href="#" ng-click="playFeed(podcastItem.url);">{{podcastItem.title}}</a>
 		<button class="remove-podcast" ng-click="removeFeedFromList(podcastItem.url)">
-			<svg class="icon icon-close">
-				<use xlink:href="assets/icons.svg#icon-close"></use>
-			</svg>
+			<div svg-icon="close"></div>
 		</button>
 	</li>
 	<li ng-show="!podcastsList.length">no shows added</li>
