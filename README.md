@@ -1,7 +1,7 @@
 # podcast-webapp
 Web Podcast player
 
-# Prerequisites
+# Env. prerequisites
 
 * node.js
 * bower
@@ -9,19 +9,19 @@ Web Podcast player
 
 ## Installation
 
-	npm install
+`npm install`
 
 ## Start
 
-	npm start
+`npm start`
 
 ## Dev
 
-	grunt dev
+`grunt dev`
 
 ## Go to prod
 
-	grunt prod
+`grunt prod`
 
 ## TODO
 - DONE Add service to handle input rss box toggle display
