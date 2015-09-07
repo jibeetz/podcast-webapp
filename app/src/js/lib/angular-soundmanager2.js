@@ -4613,8 +4613,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 }
 
                 //check if song already does not exists then add to playlist
-                var inArrayKey = this.isInArrayUrl(this.getPlaylist(), track.url);
-                if(inArrayKey === false) {
+                var inArrayUrl = this.isInArrayUrl(this.getPlaylist(), track.url);
+                if(inArrayUrl === false) {
                     //$log.debug('song does not exists in playlist');
                     //add to sound manager
                     soundManager.createSound({
@@ -5080,39 +5080,6 @@ ngSoundManager.directive('musicVolume', ['angularPlayer',
     }
 ]);
 
-ngSoundManager.directive('volumeBar', ['angularPlayer',
-    function(angularPlayer) {
-        return {
-            restrict: "EA",
-            link: function(scope, element, attrs) {
-                element.bind('click', function(event) {
-                    var getXOffset = function(event) {
-                        var x = 0,
-                            element = event.target;
-                        while(element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
-                            x += element.offsetLeft - element.scrollLeft;
-                            element = element.offsetParent;
-                        }
-                        return event.clientX - x;
-                    };
-                    var x = event.offsetX || getXOffset(event),
-                        width = element[0].clientWidth,
-                        duration = 100;
-                    var volume = (x / width) * duration;
-                    var volume = Math.round(volume / 10) * 10;
-                    angularPlayer.adjustVolumeSlider(volume);
-                });
-                scope.volume = angularPlayer.getVolume();
-                scope.$on('music:volume', function(event, data) {
-                    scope.$apply(function() {
-                        scope.volume = data;
-                    });
-                });
-            }
-        };
-    }
-]);
-
 ngSoundManager.directive('clearPlaylist', ['angularPlayer', '$log',
     function(angularPlayer, $log) {
         return {
@@ -5152,6 +5119,39 @@ ngSoundManager.directive('playAll', ['angularPlayer', '$log',
                             //play first song
                             angularPlayer.play();
                         }
+                    });
+                });
+            }
+        };
+    }
+]);
+
+ngSoundManager.directive('volumeBar', ['angularPlayer',
+    function(angularPlayer) {
+        return {
+            restrict: "EA",
+            link: function(scope, element, attrs) {
+                element.bind('click', function(event) {
+                    var getXOffset = function(event) {
+                        var x = 0,
+                            element = event.target;
+                        while(element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
+                            x += element.offsetLeft - element.scrollLeft;
+                            element = element.offsetParent;
+                        }
+                        return event.clientX - x;
+                    };
+                    var x = event.offsetX || getXOffset(event),
+                        width = element[0].clientWidth,
+                        duration = 100;
+                    var volumePrecise = (x / width) * duration;
+                    var volume = Math.round(volumePrecise / 10) * 10;
+                    angularPlayer.adjustVolumeSlider(volume);
+                });
+                scope.volume = angularPlayer.getVolume();
+                scope.$on('music:volume', function(event, data) {
+                    scope.$apply(function() {
+                        scope.volume = data;
                     });
                 });
             }
