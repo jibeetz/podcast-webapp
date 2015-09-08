@@ -169,8 +169,6 @@
         this.sounds = {};
         this.soundIDs = [];
         this.muted = false;
-        this.muteBtn = '<svg class="icon icon-volume-mute"><use xlink:href="assets/icons.svg#icon-volume-mute"></use></svg>';
-        this.unmuteBtn = '<svg class="icon icon-volume-high"><use xlink:href="assets/icons.svg#icon-volume-high"></use></svg>';
         this.didFlashBlock = false;
         this.filePattern = null;
         this.filePatterns = {
@@ -4406,7 +4404,8 @@ var ngSoundManager = angular.module('angularSoundManager', [])
   }]);
 
 
-ngSoundManager.filter('humanTime', function () {
+ngSoundManager.filter('humanTime',
+    function () {
         return function (input) {
             function pad(d) {
                 return (d < 10) ? '0' + d.toString() : d.toString();
@@ -4417,7 +4416,8 @@ ngSoundManager.filter('humanTime', function () {
 
             return pad(min) + ':' + pad(sec);
         };
-    });
+    }
+);
 
 ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
     function($rootScope, $log) {
@@ -4428,6 +4428,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             isPlaying = false,
             volume = 90,
             trackProgress = 0,
+            rewindSecs = 15,
+            trackLoaded = 0,
             playlist = [];
 
         return {
@@ -4811,11 +4813,13 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             },
             isPlayingStatus: function() {
                 return isPlaying;
+            },
+            getRewindSecs: function() {
+                return rewindSecs;
             }
         };
     }
 ]);
-
 
 ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
     function($filter, angularPlayer) {
@@ -4836,7 +4840,7 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
                 });
                 scope.$on('currentTrack:position', function(event, data) {
                     scope.$apply(function() {
-                        scope.currentPostion = $filter('humanTime')(data);
+                        scope.currentPosition = $filter('humanTime')(data);
                     });
                 });
                 scope.$on('currentTrack:duration', function(event, data) {
@@ -4859,6 +4863,11 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
                 scope.$on('player:removeCurrentPlaying', function(event) {
                     scope.$apply(function() {
                         scope.currentPlaying = [];
+                    });
+                });
+                scope.$on('track:loaded', function(event, data) {
+                    scope.$apply(function() {
+                        scope.loaded = data;
                     });
                 });
             }
@@ -4890,7 +4899,8 @@ ngSoundManager.directive('musicPlayer', ['angularPlayer', '$log',
     }
 ]);
 
-ngSoundManager.directive('playFromPlaylist', ['angularPlayer', function (angularPlayer) {
+ngSoundManager.directive('playFromPlaylist', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             scope: {
@@ -4902,7 +4912,8 @@ ngSoundManager.directive('playFromPlaylist', ['angularPlayer', function (angular
                 });
             }
         };
-    }]);
+    }
+]);
 
 ngSoundManager.directive('removeFromPlaylist', ['angularPlayer',
     function(angularPlayer) {
@@ -4920,7 +4931,8 @@ ngSoundManager.directive('removeFromPlaylist', ['angularPlayer',
     }
 ]);
 
-ngSoundManager.directive('seekTrack', ['angularPlayer', '$log', function (angularPlayer, $log) {
+ngSoundManager.directive('seekTrack', ['angularPlayer', '$log',
+    function (angularPlayer, $log) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -4948,12 +4960,14 @@ ngSoundManager.directive('seekTrack', ['angularPlayer', '$log', function (angula
 
                     sound.setPosition((x / width) * duration);
                 });
-
             }
         };
-    }]);
+    }
+]);
 
-ngSoundManager.directive('playMusic', ['angularPlayer', function (angularPlayer) {
+
+ngSoundManager.directive('playMusic', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -4961,12 +4975,13 @@ ngSoundManager.directive('playMusic', ['angularPlayer', function (angularPlayer)
                 element.bind('click', function (event) {
                     angularPlayer.play();
                 });
-
             }
         };
-    }]);
+    }
+]);
 
-ngSoundManager.directive('pauseMusic', ['angularPlayer', function (angularPlayer) {
+ngSoundManager.directive('pauseMusic', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -4975,9 +4990,11 @@ ngSoundManager.directive('pauseMusic', ['angularPlayer', function (angularPlayer
                 });
             }
         };
-    }]);
+    }
+]);
 
-ngSoundManager.directive('stopMusic', ['angularPlayer', function (angularPlayer) {
+ngSoundManager.directive('stopMusic', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -4986,9 +5003,11 @@ ngSoundManager.directive('stopMusic', ['angularPlayer', function (angularPlayer)
                 });
             }
         };
-    }]);
+    }
+]);
 
-ngSoundManager.directive('nextTrack', ['angularPlayer', function (angularPlayer) {
+ngSoundManager.directive('nextTrack', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -4996,12 +5015,13 @@ ngSoundManager.directive('nextTrack', ['angularPlayer', function (angularPlayer)
                 element.bind('click', function (event) {
                     angularPlayer.nextTrack();
                 });
-
             }
         };
-    }]);
+    }
+]);
 
-ngSoundManager.directive('prevTrack', ['angularPlayer', function (angularPlayer) {
+ngSoundManager.directive('prevTrack', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -5009,12 +5029,13 @@ ngSoundManager.directive('prevTrack', ['angularPlayer', function (angularPlayer)
                 element.bind('click', function (event) {
                     angularPlayer.prevTrack();
                 });
-
             }
         };
-    }]);
+    }
+]);
 
-ngSoundManager.directive('muteMusic', ['angularPlayer', function (angularPlayer) {
+ngSoundManager.directive('muteMusic', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -5022,18 +5043,20 @@ ngSoundManager.directive('muteMusic', ['angularPlayer', function (angularPlayer)
                 element.bind('click', function (event) {
                     angularPlayer.mute();
                 });
+
                 scope.mute = angularPlayer.getMuteStatus();
                 scope.$on('music:mute', function (event, data) {
                     scope.$apply(function () {
                         scope.mute = data;
                     });
                 });
-
             }
         };
-    }]);
+    }
+]);
 
-ngSoundManager.directive('repeatMusic', ['angularPlayer', function (angularPlayer) {
+ngSoundManager.directive('repeatMusic', ['angularPlayer',
+    function (angularPlayer) {
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
@@ -5050,7 +5073,8 @@ ngSoundManager.directive('repeatMusic', ['angularPlayer', function (angularPlaye
                 });
             }
         };
-    }]);
+    }
+]);
 
 ngSoundManager.directive('musicVolume', ['angularPlayer',
     function(angularPlayer) {
@@ -5192,7 +5216,6 @@ ngSoundManager.directive('playPauseToggle', ['angularPlayer',
                     } else {
                         //else play if not playing
                         angularPlayer.play();
-
                     }
                 });
             }
@@ -5207,27 +5230,56 @@ ngSoundManager.factory('generateIcon', [
                 return '<svg class="icon icon-' + icon + '"><use xlink:href="assets/icons.svg#icon-' + icon + '"></use></svg>';
             }
         };
-}]);
+    }
+]);
 
-ngSoundManager.directive('icon', ['generateIcon', function (generateIcon) {
-    return {
-        restrict: "EA",
-        template: function (el, attrs) {
-            return generateIcon.get(attrs.icon);
-        }
-    };
-}]);
+ngSoundManager.directive('icon', ['generateIcon',
+    function (generateIcon) {
+        return {
+            restrict: "EA",
+            template: function (el, attrs) {
+                return generateIcon.get(attrs.icon);
+            }
+        };
+    }
+]);
 
-ngSoundManager.directive('toggleIcon', ['generateIcon', function(generateIcon) {
-    return {
-        scope: {
-          toggleIcon: '='
-        },
-        link: function(scope, element, attrs) {
-            scope.$watch('toggleIcon', function(value) {
-                var icon = (value) ? attrs.active : attrs.inactive;
-                element.html(generateIcon.get(icon));
-            });
-        }
-    };
-}]);
+ngSoundManager.directive('toggleIcon', ['generateIcon',
+    function(generateIcon) {
+        return {
+            scope: {
+              toggleIcon: '='
+            },
+            link: function(scope, element, attrs) {
+                scope.$watch('toggleIcon', function(value) {
+                    var icon = (value) ? attrs.active : attrs.inactive;
+                    element.html(generateIcon.get(icon));
+                });
+            }
+        };
+    }
+]);
+
+ngSoundManager.directive('rewindMusic', ['angularPlayer',
+    function (angularPlayer) {
+        return {
+            restrict: "EA",
+            link: function (scope, element, attrs) {
+
+                element.bind('click', function (event) {
+
+                    var sound = soundManager.getSoundById(angularPlayer.getCurrentTrack());
+
+                    if(sound === null)
+                        return;
+
+                    var rewindSecs = angularPlayer.getRewindSecs() * 1000,
+                        currentPosition = sound.position,
+                        newPosition = ((currentPosition - rewindSecs) < 0) ? currentPosition - currentPosition : currentPosition - rewindSecs;
+
+                    sound.setPosition(newPosition);
+                });
+            }
+        };
+    }
+]);

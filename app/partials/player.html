@@ -1,5 +1,8 @@
 <div class="control-sound">
 	<div class="controls">
+		<button rewind-music>
+			<span svg-icon="backward"></span>
+		</button>
 		<button class="play" play-music ng-class="{'active': isPlaying}">
 			<div svg-icon="play"></div>
 		</button>
@@ -30,9 +33,10 @@
 <div class="info-show" ng-show="currentPlaying.url.length">
 	<div class="current-title" title="{{currentPlaying.title}}">{{currentPlaying.title | strLimit: 115}}</div>
 	<div class="control-bar">
-		<div class="current-position">{{currentPostion}}</div>
+		<div class="current-position">{{currentPosition}}</div>
 		<div class="seekBase" seek-track>
 			<div class="seekLoad" ng-style="{width : (progress + '%')}"></div>
+			<div class="seekLoaded" ng-style="{width : (loaded + '%' )}"></div>
 		</div>
 		<div class="current-duration">{{currentDuration}}</div>
 	</div>

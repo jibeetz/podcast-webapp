@@ -454,14 +454,25 @@ header > div{
 	font-size: 0.7em;
 	height: 7px;
 	width: ~"calc(100% - 90px)";
-	background: @variantColor;
+	background: @bodyColor;
 	margin-top: 8px;
+	position: relative;
 }
 
 .seekLoad {
 	height: 7px;
 	width: 0;
 	background-color: @firstColor;
+	position: relative;
+	z-index: 1;
+}
+
+.seekLoaded{
+	height: 7px;
+	background: @variantColor;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .control-bar{
