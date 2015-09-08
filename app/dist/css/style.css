@@ -374,6 +374,13 @@ header > div {
   height: 5px;
   background: #0F5471;
 }
+.volume-bar.active {
+  background: #eaeff1;
+  cursor: default;
+}
+.volume-bar.active .volume-bar-playing {
+  background: #95c3d6;
+}
 .current-title {
   font-size: 0.9em;
   line-height: 1.3;

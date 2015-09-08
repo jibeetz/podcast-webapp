@@ -12,7 +12,9 @@
 	</div>
 
 	<div class="volume">
-		<button class="mute" mute-music ng-bind-html="muteBtn"></button>
+		<button class="mute" mute-music>
+			<span toggle-icon="mute" active="volume-high" inactive="volume-mute"></span>
+		</button>
 		<button class="decrease" music-volume data-type="decrease">
 			<div svg-icon="volume-decrease"></div>
 		</button>
@@ -23,7 +25,6 @@
 			<div svg-icon="volume-increase"></div>
 		</button>
 	</div>
-
 </div>
 
 <div class="info-show" ng-show="currentPlaying.url.length">

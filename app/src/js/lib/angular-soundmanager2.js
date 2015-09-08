@@ -4890,7 +4890,6 @@ ngSoundManager.directive('musicPlayer', ['angularPlayer', '$log',
     }
 ]);
 
-
 ngSoundManager.directive('playFromPlaylist', ['angularPlayer', function (angularPlayer) {
         return {
             restrict: "EA",
@@ -4953,7 +4952,6 @@ ngSoundManager.directive('seekTrack', ['angularPlayer', '$log', function (angula
             }
         };
     }]);
-
 
 ngSoundManager.directive('playMusic', ['angularPlayer', function (angularPlayer) {
         return {
@@ -5024,13 +5022,10 @@ ngSoundManager.directive('muteMusic', ['angularPlayer', function (angularPlayer)
                 element.bind('click', function (event) {
                     angularPlayer.mute();
                 });
-
                 scope.mute = angularPlayer.getMuteStatus();
-                scope.muteBtn = (scope.mute) ? soundManager.unmuteBtn : soundManager.muteBtn;
                 scope.$on('music:mute', function (event, data) {
                     scope.$apply(function () {
                         scope.mute = data;
-                        scope.muteBtn = (scope.mute) ? soundManager.unmuteBtn : soundManager.muteBtn;
                     });
                 });
 
@@ -5164,19 +5159,28 @@ ngSoundManager.directive('playPauseToggle', ['angularPlayer',
         return {
             restrict: "EA",
             link: function(scope, element, attrs) {
+
+                if(attrs.hasIcon === undefined)
+                    angular.forEach(element[0].children, function(value, key) {
+                        if(value.hasAttribute('toggle-icon'))
+                            element[0].removeChild(value);
+                    });
+
                 scope.$on('music:isPlaying', function(event, data) {
                     //update html
-                    if (data) {
-                        if(typeof attrs.pause != 'undefined') {
-                            element.html(attrs.pause);
+                    if(attrs.hasIcon === undefined){
+                        if (data) {
+                            if(typeof attrs.pause != 'undefined') {
+                                element.html(attrs.pause);
+                            } else {
+                                element.html('Pause');
+                            }
                         } else {
-                            element.html('Pause');
-                        }
-                    } else {
-                        if(typeof attrs.play != 'undefined') {
-                            element.html(attrs.play);
-                        } else {
-                            element.html('Play');
+                            if(typeof attrs.play != 'undefined') {
+                                element.html(attrs.play);
+                            } else {
+                                element.html('Play');
+                            }
                         }
                     }
                 });
@@ -5195,3 +5199,35 @@ ngSoundManager.directive('playPauseToggle', ['angularPlayer',
         };
     }
 ]);
+
+ngSoundManager.factory('generateIcon', [
+    function() {
+        return {
+            get: function(icon) {
+                return '<svg class="icon icon-' + icon + '"><use xlink:href="assets/icons.svg#icon-' + icon + '"></use></svg>';
+            }
+        };
+}]);
+
+ngSoundManager.directive('icon', ['generateIcon', function (generateIcon) {
+    return {
+        restrict: "EA",
+        template: function (el, attrs) {
+            return generateIcon.get(attrs.icon);
+        }
+    };
+}]);
+
+ngSoundManager.directive('toggleIcon', ['generateIcon', function(generateIcon) {
+    return {
+        scope: {
+          toggleIcon: '='
+        },
+        link: function(scope, element, attrs) {
+            scope.$watch('toggleIcon', function(value) {
+                var icon = (value) ? attrs.active : attrs.inactive;
+                element.html(generateIcon.get(icon));
+            });
+        }
+    };
+}]);
