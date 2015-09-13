@@ -432,6 +432,15 @@ header > div {
   width: 100%;
   padding-right: 20px;
 }
+.btn-rewind {
+  position: relative;
+}
+.btn-number {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  color: #1476a0;
+}
 /* Playlist */
 .playlist {
   width: 36%;

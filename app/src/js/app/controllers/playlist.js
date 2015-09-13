@@ -1,6 +1,6 @@
-podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', 'inputBox', 'svgs', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer, inputBox, svgs){
+podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', 'inputBox', 'generateIcon', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer, inputBox, generateIcon){
 
-	$scope.currentPodcastText = svgs.get('play');
+	$scope.currentPodcastText = generateIcon.get('play');
 	$scope.podcastsList = podcastsPlaylist.get();
 	$scope.feed = getFeedService.get();
 

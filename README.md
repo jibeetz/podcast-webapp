@@ -36,8 +36,10 @@ Web Podcast player
 - DONE Refactor svg in ctrls
 
 ### Next version
-- Rewind 15 secs
-- localStorage for playlist
+- DONE Loaded bar added
+- DONE Rewind 15 secs
+- DONE localStorage for playlist
+- Add current to playlist and localStorage
 - Record play location
 - Replace localStorage by firebase
 - Add account

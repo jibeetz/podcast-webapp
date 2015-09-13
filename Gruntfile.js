@@ -30,8 +30,7 @@ module.exports = function(grunt) {
           'app/src/js/app/services/podcastsPlaylist.js',
           'app/src/js/app/services/prepareFeed.js',
           'app/src/js/app/services/searchFeed.js',
-          'app/src/js/app/services/defaultPodcasts.js',
-          'app/src/js/app/services/svgs.js'
+          'app/src/js/app/services/defaultPodcasts.js'
       ]
   };
 

@@ -4419,8 +4419,8 @@ ngSoundManager.filter('humanTime',
     }
 );
 
-ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
-    function($rootScope, $log) {
+ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
+    function($rootScope, localStorage, $log) {
 
         var currentTrack = null,
             repeat = false,
@@ -4430,7 +4430,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             trackProgress = 0,
             rewindSecs = 15,
             trackLoaded = 0,
-            playlist = [];
+            playlist = [],
+            useLocalStorage = true;
 
         return {
             /**
@@ -4516,6 +4517,14 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     var isSupported = soundManager.ok();
                     $log.debug('is supported: ' + isSupported);
                     $rootScope.$broadcast('angularPlayer:ready', true);
+
+                    if(useLocalStorage)
+                        for(var i = 0; i < playlist.length; i++) {
+                            soundManager.createSound({
+                                id: playlist[i].id,
+                                url: playlist[i].url
+                            });
+                        }
                 });
             },
             /**
@@ -4577,7 +4586,12 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 var currentKey = this.isInArray(playlist, trackId);
                 return playlist[currentKey];
             },
-            getPlaylist: function(key) {
+            getPlaylist: function(onLoad, key) {
+
+                if(onLoad && useLocalStorage){
+                    playlist = localStorage.get(playlist);
+                }
+
                 if(typeof key === 'undefined') {
                     return playlist;
                 } else {
@@ -4588,6 +4602,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 playlist.push(track);
                 //broadcast playlist
                 $rootScope.$broadcast('player:playlist', playlist);
+                if(useLocalStorage)
+                    localStorage.set(playlist);
             },
             isTrackValid: function (track) {
                 if (typeof track == 'undefined') {
@@ -4615,7 +4631,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 }
 
                 //check if song already does not exists then add to playlist
-                var inArrayUrl = this.isInArrayUrl(this.getPlaylist(), track.url);
+                var inArrayUrl = this.isInArrayUrl(this.getPlaylist(0), track.url);
                 if(inArrayUrl === false) {
                     //$log.debug('song does not exists in playlist');
                     //add to sound manager
@@ -4637,6 +4653,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 soundManager.destroySound(song);
                 //remove from playlist
                 playlist.splice(index, 1);
+                if(useLocalStorage)
+                    localStorage.set(playlist);
                 //once all done then broadcast
                 $rootScope.$broadcast('player:playlist', playlist);
                 if(song === currentTrack)
@@ -4801,6 +4819,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                         $log.debug('All done!');
                         //clear playlist
                         playlist = [];
+                        if(useLocalStorage)
+                            localStorage.set(playlist);
                         $rootScope.$broadcast('player:playlist', playlist);
                         $rootScope.$broadcast('player:removeCurrentPlaying');
                         callback(true);
@@ -4854,7 +4874,7 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
                         scope.isPlaying = data;
                     });
                 });
-                scope.playlist = angularPlayer.getPlaylist(); //on load
+                scope.playlist = angularPlayer.getPlaylist(1); //on load
                 scope.$on('player:playlist', function(event, data) {
                     scope.$apply(function() {
                         scope.playlist = data;
@@ -5266,6 +5286,8 @@ ngSoundManager.directive('rewindMusic', ['angularPlayer',
             restrict: "EA",
             link: function (scope, element, attrs) {
 
+                scope.rewindSeconds = angularPlayer.getRewindSecs();
+
                 element.bind('click', function (event) {
 
                     var sound = soundManager.getSoundById(angularPlayer.getCurrentTrack());
@@ -5273,7 +5295,7 @@ ngSoundManager.directive('rewindMusic', ['angularPlayer',
                     if(sound === null)
                         return;
 
-                    var rewindSecs = angularPlayer.getRewindSecs() * 1000,
+                    var rewindSecs = scope.rewindSeconds * 1000,
                         currentPosition = sound.position,
                         newPosition = ((currentPosition - rewindSecs) < 0) ? currentPosition - currentPosition : currentPosition - rewindSecs;
 
@@ -5281,5 +5303,39 @@ ngSoundManager.directive('rewindMusic', ['angularPlayer',
                 });
             }
         };
+    }
+]);
+
+ngSoundManager.factory('localStorage', [
+    function() {
+
+        var localStorageTest = function(){
+            var test = 'test';
+            try {
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        };
+
+        var podcastsList = [];
+
+        return {
+            get: function(){
+                if(!this.test() || !localStorage.shows || localStorage.shows.length <= 2 || localStorage.shows === 'undefined')
+                    return podcastsList;
+
+                return JSON.parse(localStorage.shows);
+            },
+            set: function(data){
+                localStorage.setItem('shows', angular.toJson(data));
+            },
+            test: function(){
+                return localStorageTest();
+            }
+        };
+
     }
 ]);

@@ -1,7 +1,7 @@
-podcastApp.directive('svgIcon', ['svgs', function(svgs) {
+podcastApp.directive('svgIcon', ['generateIcon', function(generateIcon) {
 	return {
 		template: function(elem, attr){
-			return svgs.get(attr.svgIcon);
+			return generateIcon.get(attr.svgIcon);
 		}
 	};
 }]);
