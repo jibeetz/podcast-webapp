@@ -4878,17 +4878,6 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
                 return false;
             },
             /**
-             * To check if url is in array
-             */
-            isInArrayUrl: function(array, value) {
-                for(var i = 0; i < array.length; i++) {
-                    if(array[i].url === value) {
-                        return i;
-                    }
-                }
-                return false;
-            },
-            /**
              * getIndexByValue used by this factory
              */
             getIndexByValue: function(array, value) {
@@ -4970,8 +4959,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
                 }
 
                 //check if song already does not exists then add to playlist
-                var inArrayUrl = this.isInArrayUrl(this.getPlaylist(0), track.url);
-                if(inArrayUrl === false) {
+                var inArray = this.isInArray(this.getPlaylist(0), track.id);
+                if(inArray === false) {
                     //$log.debug('song does not exists in playlist');
                     //add to sound manager
                     soundManager.createSound({
@@ -5009,6 +4998,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
                 //play it
                 soundManager.play(trackId);
                 $rootScope.$broadcast('track:id', trackId);
+
+                console.log(playlist);
                 //set as playing
                 isPlaying = true;
                 $rootScope.$broadcast('music:isPlaying', isPlaying);

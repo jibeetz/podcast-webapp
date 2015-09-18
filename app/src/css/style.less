@@ -1,14 +1,17 @@
-@import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600|Kreon);
+/* @import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600|Kreon); */
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
 
 @borderColor: #ECECEC;
 @bodyColor: #EAEFF1;
-@firstColor: #1476A0;
+@firstColor: #325671;
 @secondColor: @bodyColor;
 @variantColor: #95C3D6;
 @AltColor: #fff;
 @cardColor: #fff;
 @borderRadius: 2px;
-@fontFamily: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+/* @fontFamily: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif; */
+@fontFamily: 'Roboto Condensed', sans-serif;
+@fontFamilyTitle: 'Roboto Condensed', sans-serif;
 
 .placeholder{
 	color: #5F5F5F;
@@ -102,7 +105,7 @@ section{
 }
 
 h1, h2, h3, h4{
-	font-family: 'Kreon', serif;
+	font-family: @fontFamilyTitle;
 }
 
 h2{
@@ -331,7 +334,7 @@ header > div{
 }
 
 .control-sound{
-	width: 24%;
+	width: 215px;
 	float: left;
 	position: relative;
 	height: 98px;
@@ -339,7 +342,7 @@ header > div{
 }
 
 .info-show {
-	width: 40%;
+	width: ~"calc(100% - 515px)";
 	padding-right: 20px;
 	float: left;
 	position: relative;
@@ -489,15 +492,16 @@ header > div{
 
 .btn-number{
 	position: absolute;
-	top: 11px;
+	top: 12px;
 	left: 11px;
+	font-size: 0.9em;
 	color: @firstColor;
 }
 
 /* Playlist */
 
 .playlist{
-	width: 36%;
+	width: 300px;
 	float: right;
 	font-size: 0.8em;
 }
@@ -617,7 +621,7 @@ a.remove-from-playlist svg{
 #input ul li{
 	font-size: 0.8em;
 	display: block;
-	padding: 0.1em 5px;
+	padding: 0.2em 5px;
 	position: relative;
 	margin-right: 0;
 }
@@ -636,7 +640,7 @@ a.remove-from-playlist svg{
 	width: 10px;
 	height: 10px;
 	margin-top: 4px;
-	fill: #86BFD8;
+	fill: @firstColor;
 }
 
 #input input[type="text"], #input input[type="submit"]{

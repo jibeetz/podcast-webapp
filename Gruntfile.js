@@ -8,7 +8,6 @@ module.exports = function(grunt) {
           'bower_components/angular/angular.min.js',
           'bower_components/angular-route/angular-route.min.js',
           'bower_components/angular-sanitize/angular-sanitize.min.js',
-          'bower_components/svg4everybody/dist/svg4everybody.min.js',
           // 'bower_components/angular-soundmanager2/dist/angular-soundmanager2.min.js',
           'app/src/js/lib/angular-soundmanager2.js',
           'app/src/js/app/main.js',

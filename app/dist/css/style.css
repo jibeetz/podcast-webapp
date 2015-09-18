@@ -1,7 +1,9 @@
-@import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600|Kreon);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
+/* @import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600|Kreon); */
+/* @fontFamily: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif; */
 .placeholder {
   color: #5F5F5F;
-  font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   line-height: 1.3em;
 }
 .card {
@@ -13,24 +15,24 @@
 }
 ::-webkit-input-placeholder {
   color: #5F5F5F;
-  font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   line-height: 1.3em;
 }
 :-moz-placeholder {
   /* Firefox 18- */
   color: #5F5F5F;
-  font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   line-height: 1.3em;
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
   color: #5F5F5F;
-  font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   line-height: 1.3em;
 }
 :-ms-input-placeholder {
   color: #5F5F5F;
-  font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   line-height: 1.3em;
 }
 aside::-webkit-scrollbar,
@@ -65,11 +67,11 @@ p {
 }
 body {
   background: #eaeff1;
-  font-family: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
   color: #5F5F5F;
 }
 a {
-  color: #1476a0;
+  color: #325671;
   text-decoration: none;
 }
 li {
@@ -86,7 +88,7 @@ input[type="submit"] {
   cursor: pointer;
 }
 button svg {
-  fill: #1476a0;
+  fill: #325671;
 }
 section {
   float: right;
@@ -104,7 +106,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: 'Kreon', serif;
+  font-family: 'Roboto Condensed', sans-serif;
 }
 h2 {
   margin: 0;
@@ -299,14 +301,14 @@ header > div {
   padding: 10px;
 }
 .control-sound {
-  width: 24%;
+  width: 215px;
   float: left;
   position: relative;
   height: 98px;
   padding: 10px 0 0 0;
 }
 .info-show {
-  width: 40%;
+  width: calc(100% - 515px);
   padding-right: 20px;
   float: left;
   position: relative;
@@ -414,7 +416,7 @@ header > div {
 .seekLoad {
   height: 7px;
   width: 0;
-  background-color: #1476a0;
+  background-color: #325671;
   position: relative;
   z-index: 1;
 }
@@ -437,13 +439,14 @@ header > div {
 }
 .btn-number {
   position: absolute;
-  top: 11px;
+  top: 12px;
   left: 11px;
-  color: #1476a0;
+  font-size: 0.9em;
+  color: #325671;
 }
 /* Playlist */
 .playlist {
-  width: 36%;
+  width: 300px;
   float: right;
   font-size: 0.8em;
 }
@@ -481,7 +484,7 @@ header > div {
   line-height: 1;
 }
 .playlist-current svg {
-  fill: #1476a0;
+  fill: #325671;
 }
 a.remove-from-playlist {
   float: right;
@@ -491,12 +494,12 @@ a.remove-from-playlist {
   line-height: 1em;
 }
 a.remove-from-playlist svg {
-  fill: #1476a0;
+  fill: #325671;
 }
 /* Podcast Details */
 .details-actions button {
   border: none;
-  background: #1476a0;
+  background: #325671;
   color: white;
   padding: 8px 20px;
 }
@@ -543,7 +546,7 @@ a.remove-from-playlist svg {
 #input ul li {
   font-size: 0.8em;
   display: block;
-  padding: 0.1em 5px;
+  padding: 0.2em 5px;
   position: relative;
   margin-right: 0;
 }
@@ -559,7 +562,7 @@ a.remove-from-playlist svg {
   width: 10px;
   height: 10px;
   margin-top: 4px;
-  fill: #86BFD8;
+  fill: #325671;
 }
 #input input[type="text"],
 #input input[type="submit"] {
@@ -574,7 +577,7 @@ a.remove-from-playlist svg {
 #input input[type="submit"] {
   width: 25%;
   border: none;
-  background-color: #1476a0;
+  background-color: #325671;
   color: #fff;
 }
 .toggle-addrss-btn {
@@ -585,7 +588,7 @@ a.remove-from-playlist svg {
   width: 20px;
   height: 20px;
   border: none;
-  background-color: #1476a0;
+  background-color: #325671;
   text-align: center;
   border-radius: 0 0 2px 0;
 }
