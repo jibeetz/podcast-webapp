@@ -1,6 +1,15 @@
 # podcast-webapp
 Web Podcast player
 
+# Features
+- Podcast player !
+- Based on the rss feed of your podcast
+- List shows and their details
+- The list of your added shows is saved on your machine
+- Add the shows you want to listen in a playlist
+- Shows Playlist is saved locally
+- 15 seconds rewind button
+
 # Env. prerequisites
 
 * node.js
@@ -43,3 +52,8 @@ Web Podcast player
 - Record play location
 - Replace localStorage by firebase
 - Add account
+
+## Credits
+
+[SoundManager2](https://github.com/scottschiller/SoundManager2)
+[angular-soundmanager2](http://perminder-klair.github.io/angular-soundmanager2/)
