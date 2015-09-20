@@ -5,6 +5,8 @@ module.exports = function(grunt) {
   options.jsFiles = {
       'app/dist/js/main.js': [
           'bower_components/jquery/dist/jquery.min.js',
+          'bower_components/spin.js/spin.js',
+          'bower_components/alertify.js/lib/alertify.js',
           'bower_components/angular/angular.min.js',
           'bower_components/angular-route/angular-route.min.js',
           'bower_components/angular-sanitize/angular-sanitize.min.js',
@@ -29,7 +31,16 @@ module.exports = function(grunt) {
           'app/src/js/app/services/podcastsPlaylist.js',
           'app/src/js/app/services/prepareFeed.js',
           'app/src/js/app/services/searchFeed.js',
-          'app/src/js/app/services/defaultPodcasts.js'
+          'app/src/js/app/services/defaultPodcasts.js',
+          'bower_components/angular-spinner/angular-spinner.js'
+      ]
+  };
+
+  options.cssFiles = {
+      'app/dist/css/style.css': [
+          'app/src/css/fonts.css',
+          'bower_components/alertify.js/themes/alertify.core.css',
+          'app/src/css/style.css'
       ]
   };
 
@@ -61,11 +72,8 @@ module.exports = function(grunt) {
            ]
     },
     concat: {
-      options: {
-        separator: grunt.util.linefeed + ';' + grunt.util.linefeed
-      },
       all: {
-        files: options.jsFiles
+        files: [options.jsFiles, options.cssFiles]
       }
     },
     uglify: {
@@ -76,7 +84,7 @@ module.exports = function(grunt) {
     less: {
         all: {
           files: {
-              'app/dist/css/style.css' : 'app/src/css/style.less'
+              'app/src/css/style.css' : 'app/src/less/style.less'
           }
       }
     },
@@ -87,14 +95,14 @@ module.exports = function(grunt) {
             }
         }
     },
-    copy: {
-      all: {
-          cwd: 'bower_components/angular-sanitize/',
-          src: 'angular-sanitize.min.js.map',
-          dest: 'app/dist/js/',
-          expand: true
-      }
-    },
+    // copy: {
+    //   all: {
+    //       cwd: '',
+    //       src: '',
+    //       dest: '',
+    //       expand: true
+    //   }
+    // },
     watch: {
       scripts: {
         files: ['app/**/*', '!**/dist/**'],
@@ -110,11 +118,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-copy');
+  // grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('start', ['concat', 'less', 'copy']);
-  grunt.registerTask('dev', ['jshint', 'concat', 'less', 'watch']);
-  grunt.registerTask('prod', ['htmlmin:prod', 'jshint', 'concat', 'uglify:prod', 'less', 'cssmin', 'copy']);
+  grunt.registerTask('start', ['less', 'concat']);
+  grunt.registerTask('dev', ['jshint', 'less', 'concat', 'watch']);
+  grunt.registerTask('prod', ['htmlmin:prod', 'jshint', 'less', 'concat', 'uglify:prod', 'cssmin']);
 
 };

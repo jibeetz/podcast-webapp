@@ -1,4 +1,4 @@
-podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '$routeParams', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', 'checkCurrentPodcastOnLoad', 'defaultPodcasts', 'generateIcon', function ($scope, $timeout, $location, $routeParams, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox, checkCurrentPodcastOnLoad, defaultPodcasts, generateIcon){
+podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '$routeParams', 'rssService', 'podcastsPlaylist', 'checkFeedService', 'getFeedService', 'pageTitle', 'inputBox', 'checkCurrentPodcastOnLoad', 'defaultPodcasts', 'generateIcon', 'usSpinnerService', function ($scope, $timeout, $location, $routeParams, rssService, podcastsPlaylist, checkFeedService, getFeedService, pageTitle, inputBox, checkCurrentPodcastOnLoad, defaultPodcasts, generateIcon, usSpinnerService){
 
 	$scope.feed = getFeedService.get();
 	$scope.inputRssFeed = {};
@@ -9,7 +9,6 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 	$scope.toggleAddrssAdd = generateIcon.get('plus');
 	$scope.toggleAddrssList = generateIcon.get('numbered-list');
 
-
 	var toggleAddrssBtnFn = function(){
 		$scope.toggleAddrssBtn = ($scope.addRss.b) ? $scope.toggleAddrssList : $scope.toggleAddrssAdd;
 	}
@@ -19,6 +18,8 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 
 		if(!$scope.inputRssFeed.url)
 			return;
+
+		usSpinnerService.spin('spinner-input');
 
 		rssService.getRssFeed($scope.inputRssFeed.url).then(function(res){
 			$scope.checkedFeed = checkFeedService.check(res, $scope.inputRssFeed.url);
@@ -39,26 +40,31 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			if(!$routeParams.id)
 				$location.url('/' +  $scope.feed.q.slug);
 
+			usSpinnerService.stop('spinner-input');
 			// console.log($scope.feed);
 		});
 	};
 
-	if(!$scope.podcastsList.length){
-		$scope.defaultPodcasts = defaultPodcasts.get;
-		angular.forEach($scope.defaultPodcasts, function(value, key) {
-			rssService.getRssFeed(value.url).then(function(res){
-				var defaultPodcast = checkFeedService.check(res, value.url);
-				if(key === 0)
-					$scope.launchOnload = true;
+	var loadPodcastsOnload = function(){
+		if(!$scope.podcastsList.length){
 
-				defaultPodcast.current = value.current;
-				podcastsPlaylist.set(defaultPodcast);
+			$scope.defaultPodcasts = defaultPodcasts.get;
+			angular.forEach($scope.defaultPodcasts, function(value, key) {
+				rssService.getRssFeed(value.url).then(function(res){
+					var defaultPodcast = checkFeedService.check(res, value.url);
+					if(key === 0)
+						$scope.launchOnload = true;
+
+					defaultPodcast.current = value.current;
+					podcastsPlaylist.set(defaultPodcast);
+				});
 			});
-		});
 
-		inputBox.set(false);
-		toggleAddrssBtnFn();
+			inputBox.set(false);
+			toggleAddrssBtnFn();
+		}
 	}
+	loadPodcastsOnload();
 
 	$scope.$watch('launchOnload', function() {
 		if($scope.podcastsList.length)
@@ -93,6 +99,7 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 			$location.url('/' +  $scope.feed.q.slug);
 			inputBox.set(false);
 			toggleAddrssBtnFn();
+			usSpinnerService.stop('spinner-input');
 		});
 	};
 

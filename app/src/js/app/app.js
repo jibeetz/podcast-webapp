@@ -1,4 +1,4 @@
-var podcastApp = angular.module('podcastApp', ['ngSanitize', 'ngRoute', 'podcastControllers', 'angularSoundManager']);
+var podcastApp = angular.module('podcastApp', ['ngSanitize', 'ngRoute', 'podcastControllers', 'angularSoundManager', 'angularSpinner']);
 
 var podcastControllers = angular.module('podcastControllers', []);
 
@@ -15,4 +15,8 @@ podcastApp.config(['$routeProvider', function ($routeProvider){
 	otherwise({
 		redirectTo: '/'
 	});
+}]);
+
+podcastApp.config(['usSpinnerConfigProvider', function (usSpinnerConfigProvider) {
+	usSpinnerConfigProvider.setDefaults({radius:3, width:2, length: 4, lines: 11, color: '#325671'});
 }]);

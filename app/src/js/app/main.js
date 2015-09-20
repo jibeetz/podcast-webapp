@@ -31,7 +31,7 @@ var slug = function(str) {
 
 //----------------------
 
-svg4everybody();
+// svg4everybody();
 
 //----------------------
 

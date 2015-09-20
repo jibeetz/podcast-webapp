@@ -1,13 +1,14 @@
 /* @import url(https://fonts.googleapis.com/css?family=Titillium+Web:400,600|Kreon); */
 @import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
 
-@borderColor: #ECECEC;
-@bodyColor: #EAEFF1;
-@firstColor: #325671;
-@secondColor: @bodyColor;
-@variantColor: #95C3D6;
-@AltColor: #fff;
-@cardColor: #fff;
+@colorBorder: #ECECEC;
+@colorBody: #EAEFF1;
+@colorFirst: #325671;
+@colorSecond: @colorBody;
+@colorVariant: #95C3D6;
+@colorHover: #ADD4EA;
+@colorAlt: #fff;
+@colorCard: #fff;
 @borderRadius: 2px;
 /* @fontFamily: 'Titillium Web', 'helvetica neue', helvetica, arial, sans-serif; */
 @fontFamily: 'Roboto Condensed', sans-serif;
@@ -20,8 +21,8 @@
 }
 
 .card {
-	background-color: @cardColor;
-	border: 1px solid @borderColor;
+	background-color: @colorCard;
+	border: 1px solid @colorBorder;
 	padding: 10px;
 	border-radius: @borderRadius;
 	margin: 15px;
@@ -66,14 +67,18 @@ html, body, ul, li, h1, p{
 }
 
 body{
-	background: @bodyColor;
+	background: @colorBody;
 	font-family: @fontFamily;
 	color: #5F5F5F;
 }
 
 a{
-	color: @firstColor;
+	color: @colorFirst;
 	text-decoration: none;
+}
+
+a:hover{
+	color: @colorHover;
 }
 
 li{
@@ -92,7 +97,7 @@ button, input[type="submit"]{
 }
 
 button svg{
-	fill: @firstColor;
+	fill: @colorFirst;
 }
 
 section{
@@ -135,7 +140,7 @@ h3{
 	font-size: 1em;
 	width: 300px;
 	border: none;
-	background-color: @secondColor;
+	background-color: @colorSecond;
 }
 
 a.clear-search{
@@ -147,7 +152,7 @@ a.clear-search{
 	text-align: center;
 	padding: 5px;
 	color: #FFF;
-	line-height: 0.8em;
+	line-height: 0.9em;
 	font-size: 1.2em;
 }
 
@@ -164,7 +169,7 @@ a.clear-search:hover{
 
 	font-size: 0.9em;
 	padding-bottom: 15px;
-	border-bottom: 1px solid @borderColor;
+	border-bottom: 1px solid @colorBorder;
 	margin-bottom: 15px;
 }
 
@@ -214,7 +219,7 @@ a.clear-search:hover{
 	padding: 10px 0;
 	margin-top: 10px;
 	width: 100%;
-	border-top: 1px solid @borderColor;
+	border-top: 1px solid @colorBorder;
 }
 
 .sub-author{
@@ -236,7 +241,7 @@ a.clear-search:hover{
 	float: right;
 	width: 150px;
 	margin: 0 0 10px 15px;
-	border: 1px solid @borderColor;
+	border: 1px solid @colorBorder;
 }
 
 /* List */
@@ -257,15 +262,15 @@ aside li{
 aside li a{
 	display: block;
 	padding: 5px;
-	border-bottom: 1px solid @borderColor;
+	border-bottom: 1px solid @colorBorder;
 	background: #FFF;
 	padding-right: 30px;
 	line-height: 1.4;
 	min-height: 60px;
 }
 
-#list li a.active, #list li a:hover{
-	color: #ADD4EA;
+#list li a.active{
+	color: @colorHover;
 }
 
 #list li:last-child a{
@@ -283,11 +288,11 @@ aside .date{
 	height: 23px;
 	text-align: center;
 	border: none;
-	background: @secondColor;
+	background: @colorSecond;
 }
 
 .add-song:hover, .play-song:hover{
-	background: #BADBEC;
+	background: @colorHover;
 }
 
 .play-song{
@@ -365,6 +370,16 @@ header > div{
 	height: 35px;
 }
 
+.controls button svg:hover, .controls button span:hover, .volume button svg:hover, #input ul li .icon:hover, .playlist .icon:hover{
+	fill: @colorHover;
+	color: @colorHover;
+}
+
+.btn-rewind:hover span, .btn-rewind:hover svg{
+	fill: @colorHover;
+	color: @colorHover;
+}
+
 .controls button{
 	border: none;
 	padding: 0;
@@ -377,7 +392,7 @@ header > div{
 }
 
 .controls button.active svg{
-	fill: @variantColor;
+	fill: @colorVariant;
 }
 
 .volume{
@@ -410,7 +425,7 @@ header > div{
 	width: ~"calc(100% - 65px)";
 	height: 5px;
 	vertical-align: middle;
-	background-color: @variantColor;
+	background-color: @colorVariant;
 	margin-right: 5px;
 	cursor: pointer;
 	margin-top: 5px;
@@ -423,12 +438,12 @@ header > div{
 }
 
 .volume-bar.active{
-	background: @secondColor;
+	background: @colorSecond;
 	cursor: default;
 }
 
 .volume-bar.active .volume-bar-playing{
-	background: @variantColor;
+	background: @colorVariant;
 }
 
 .current-title{
@@ -457,7 +472,7 @@ header > div{
 	font-size: 0.7em;
 	height: 7px;
 	width: ~"calc(100% - 90px)";
-	background: @bodyColor;
+	background: @colorBody;
 	margin-top: 8px;
 	position: relative;
 }
@@ -465,14 +480,14 @@ header > div{
 .seekLoad {
 	height: 7px;
 	width: 0;
-	background-color: @firstColor;
+	background-color: @colorFirst;
 	position: relative;
 	z-index: 1;
 }
 
 .seekLoaded{
 	height: 7px;
-	background: @variantColor;
+	background: @colorVariant;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -495,7 +510,7 @@ header > div{
 	top: 12px;
 	left: 11px;
 	font-size: 0.9em;
-	color: @firstColor;
+	color: @colorFirst;
 }
 
 /* Playlist */
@@ -545,7 +560,7 @@ header > div{
 }
 
 .playlist-current svg{
-	fill: @firstColor;
+	fill: @colorFirst;
 }
 
 a.remove-from-playlist{
@@ -557,20 +572,20 @@ a.remove-from-playlist{
 }
 
 a.remove-from-playlist svg{
-	fill: @firstColor;
+	fill: @colorFirst;
 }
 
 /* Podcast Details */
 
 .details-actions button{
 	border: none;
-	background: @firstColor;
+	background: @colorFirst;
 	color: white;
 	padding: 8px 20px;
 }
 
 .details-actions button:hover{
-	background: #0D5A7B;
+	background: @colorHover;
 }
 
 .details-actions button svg{
@@ -597,7 +612,7 @@ a.remove-from-playlist svg{
 	position: relative;
 	z-index: 1;
 	padding-top: 5px;
-	background: @AltColor;
+	background: @colorAlt;
 }
 
 #input form{
@@ -606,7 +621,7 @@ a.remove-from-playlist svg{
 
 #input ul{
 	padding: 0px 0 5px 15px;
-	background: @AltColor;
+	background: @colorAlt;
 	margin-right: 5px;
 	height: 95px;
 	overflow-y: scroll;
@@ -626,7 +641,20 @@ a.remove-from-playlist svg{
 	margin-right: 0;
 }
 
+#input ul li a.active{
+	cursor: default;
+}
+
+#input ul li a.active:hover{
+	color: @colorFirst;
+}
+
 #input ul li .remove-podcast{
+	float: right;
+	margin-right: 0;
+}
+
+#input ul li .update-podcast{
 	float: right;
 	margin-right: 0;
 }
@@ -639,13 +667,17 @@ a.remove-from-playlist svg{
 #input ul li .icon{
 	width: 10px;
 	height: 10px;
-	margin-top: 4px;
-	fill: @firstColor;
+	margin-top: 3px;
+	fill: @colorBody;
+}
+
+#input ul li .icon.icon-play{
+	fill: @colorFirst;
 }
 
 #input input[type="text"], #input input[type="submit"]{
 	padding: 5px;
-	background: @secondColor;
+	background: @colorSecond;
 }
 
 #input input[type="text"]{
@@ -657,7 +689,7 @@ a.remove-from-playlist svg{
 #input input[type="submit"]{
 	width: 25%;
 	border: none;
-	background-color: @firstColor;
+	background-color: @colorFirst;
 	color: #fff;
 }
 
@@ -669,7 +701,7 @@ a.remove-from-playlist svg{
 	width: 20px;
 	height: 20px;
 	border: none;
-	background-color: @firstColor;
+	background-color: @colorFirst;
 	text-align: center;
 	border-radius: 0 0 @borderRadius 0;
 }
@@ -684,5 +716,17 @@ a.remove-from-playlist svg{
 
 .checked-info{
 	font-size: 0.8em;
-	padding: 7px 15px;
+	padding: 10px 15px;
+}
+
+.checked-info div{
+	margin-bottom: 3px;
+}
+
+#spinner{
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	left: 0;
+	top: 25px;
 }

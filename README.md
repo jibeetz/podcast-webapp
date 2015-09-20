@@ -2,13 +2,13 @@
 Web Podcast player
 
 # Features
-- Podcast player !
-- Based on the rss feed of your podcast
+- Plays Podcasts; just add the rss feed of your podcast
 - List shows and their details
-- The list of your added shows is saved on your machine
-- Add the shows you want to listen in a playlist
-- Shows Playlist is saved locally
+- The list of your added shows is saved locally
+- Save the episodes you want to listen in a playlist
+- Episodes' playlist is saved locally
 - 15 seconds rewind button
+- Deep linking to episode details
 
 # Env. prerequisites
 
@@ -43,12 +43,18 @@ Web Podcast player
 - DONE Refactor default shows loading using checkFeed function refactored as a Service
 - DONE organize CSS
 - DONE Refactor svg in ctrls
+- DONE Fix and standardize hover states
 
 ### Next version
 - DONE Loaded bar added
 - DONE Rewind 15 secs
 - DONE localStorage for playlist
-- Add current to playlist and localStorage
+- DONE Add current to playlist and localStorage
+- DONE Reload button to check new episodes
+- DONE spinner added on loading
+- DONE Play podcast onload
+- Notification system
+- Constant for svg location
 - Record play location
 - Replace localStorage by firebase
 - Add account
@@ -57,3 +63,4 @@ Web Podcast player
 
 [SoundManager2](https://github.com/scottschiller/SoundManager2)
 [angular-soundmanager2](http://perminder-klair.github.io/angular-soundmanager2/)
+[angular-spinner](https://github.com/urish/angular-spinner)

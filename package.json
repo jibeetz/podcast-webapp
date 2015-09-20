@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "bower install",
     "prestart": "grunt start",
-    "start": "http-server -a 127.0.0.2 -p 8000"
+    "start": "http-server -a localhost -p 1337"
   },
   "repository": {
     "type": "git",

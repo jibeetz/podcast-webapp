@@ -1,5 +1,8 @@
 <button ng-click="toggleAddrss()" class="toggle-addrss-btn" ng-bind-html="toggleAddrssBtn">
 </button>
+
+<span id="spinner" us-spinner spinner-key="spinner-input" spinner-start-active="true"></span>
+
 <div class="add-rss" ng-show="addRss.b">
 	<form ng-submit="checkFeed()">
 		<input type="text" placeholder="RSS Feed" ng-model="inputRssFeed.url">

@@ -4419,8 +4419,8 @@ ngSoundManager.filter('humanTime',
     }
 );
 
-ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
-    function($rootScope, localStorage, $log) {
+ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage', '$log',
+    function($rootScope, $timeout, localStorage, $log) {
 
         var currentTrack = null,
             repeat = false,
@@ -4517,14 +4517,6 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
                     var isSupported = soundManager.ok();
                     $log.debug('is supported: ' + isSupported);
                     $rootScope.$broadcast('angularPlayer:ready', true);
-
-                    if(useLocalStorage)
-                        for(var i = 0; i < playlist.length; i++) {
-                            soundManager.createSound({
-                                id: playlist[i].id,
-                                url: playlist[i].url
-                            });
-                        }
                 });
             },
             /**
@@ -4577,9 +4569,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
             },
             getPlaylist: function(onLoad, key) {
 
-                if(onLoad && useLocalStorage){
+                if(onLoad && useLocalStorage)
                     playlist = localStorage.get(playlist);
-                }
 
                 if(typeof key === 'undefined') {
                     return playlist;
@@ -4660,7 +4651,12 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
                 soundManager.play(trackId);
                 $rootScope.$broadcast('track:id', trackId);
 
-                console.log(playlist);
+                for(var i = 0; i < playlist.length; i++)
+                    playlist[i].current = (playlist[i].id === trackId) ? true : false;
+
+                if(useLocalStorage)
+                    localStorage.set(playlist);
+
                 //set as playing
                 isPlaying = true;
                 $rootScope.$broadcast('music:isPlaying', isPlaying);
@@ -4827,6 +4823,28 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', 'localStorage', '$log',
             },
             getRewindSecs: function() {
                 return rewindSecs;
+            },
+            onLoadSongs: function() {
+                var s = this;
+                if(useLocalStorage && playlist.length > 0){
+                    var currentId = null;
+                    for(var i = 0; i < playlist.length; i++) {
+                        soundManager.createSound({
+                            id: playlist[i].id,
+                            url: playlist[i].url
+                        });
+                        if(playlist[i].current === true)
+                            currentId = playlist[i].id;
+                    }
+
+                    if(currentId){
+                        var r = confirm('Do you want to play the current track ?');
+                        if(r === true)
+                            $timeout(function(){
+                                s.initPlayTrack(currentId);
+                            });
+                    }
+                }
             }
         };
     }
@@ -4839,6 +4857,11 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
             link: function(scope, element, attrs) {
                 //init and load sound manager 2
                 angularPlayer.init();
+                scope.$on('angularPlayer:ready', function(event, data) {
+                    scope.$apply(function() {
+                        angularPlayer.onLoadSongs();
+                    });
+                });
                 scope.$on('track:progress', function(event, data) {
                     scope.$apply(function() {
                         scope.progress = data;

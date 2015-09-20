@@ -1,4 +1,4 @@
-podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', 'inputBox', 'generateIcon', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer, inputBox, generateIcon){
+podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout', 'podcastsPlaylist', 'getFeedService', 'pageTitle', 'angularPlayer', 'inputBox', 'generateIcon', 'usSpinnerService', function ($scope, $location, $timeout, podcastsPlaylist, getFeedService, pageTitle, angularPlayer, inputBox, generateIcon, usSpinnerService){
 
 	$scope.currentPodcastText = generateIcon.get('play');
 	$scope.podcastsList = podcastsPlaylist.get();
@@ -6,17 +6,20 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 
 	$scope.addRss = inputBox.get();
 
-	$scope.playFeed = function(url){
+	$scope.playFeed = function(url, update){
 
 		if(!url)
 			return;
 
-		if($scope.feed.q && $scope.feed.q.url == url)
+		if(!update && $scope.feed.q && $scope.feed.q.url == url)
 			return;
+
+		usSpinnerService.spin('spinner-input');
 
 		getFeedService.set(url).then(function(res){
 			$location.url('/' +  $scope.feed.q.slug);
 			podcastsPlaylist.setCurrent($scope.feed.q.url);
+			usSpinnerService.stop('spinner-input');
 		});
 	};
 
