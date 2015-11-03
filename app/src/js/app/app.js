@@ -20,3 +20,15 @@ podcastApp.config(['$routeProvider', function ($routeProvider){
 podcastApp.config(['usSpinnerConfigProvider', function (usSpinnerConfigProvider) {
 	usSpinnerConfigProvider.setDefaults({radius:3, width:2, length: 4, lines: 11, color: '#325671'});
 }]);
+
+podcastApp.constant('configConstant', {
+    'loadSongsOnLoadCustom': true
+});
+
+podcastApp.config(function ($provide) {
+	$provide.decorator('config', function ($delegate) {
+		$delegate.svgPath = 'assets/';
+		$delegate.loadSongsOnLoad = false;
+		return $delegate;
+	});
+});

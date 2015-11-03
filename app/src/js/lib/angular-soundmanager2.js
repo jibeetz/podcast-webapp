@@ -4399,10 +4399,14 @@
 }(window));
 
 var ngSoundManager = angular.module('angularSoundManager', [])
-  .config(['$logProvider', function($logProvider){
+.config(['$logProvider', function($logProvider){
     $logProvider.debugEnabled(false);
-  }]);
+}]);
 
+ngSoundManager.value('config', {
+    'svgPath': '../dist/icons/',
+    'loadSongsOnLoad': true
+});
 
 ngSoundManager.filter('humanTime',
     function () {
@@ -4824,7 +4828,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
             getRewindSecs: function() {
                 return rewindSecs;
             },
-            onLoadSongs: function() {
+            onLoadSongs: function(initializeCustom) {
                 var s = this;
                 if(useLocalStorage && playlist.length > 0){
                     var currentId = null;
@@ -4838,11 +4842,20 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
                     }
 
                     if(currentId){
-                        var r = confirm('Do you want to play the current track ?');
-                        if(r === true)
+
+                        var initializeTrack = function(){
                             $timeout(function(){
                                 s.initPlayTrack(currentId);
                             });
+                        };
+
+                        if(initializeCustom){
+                            initializeCustom(initializeTrack);
+                        }else{
+                            if(confirm('Do you want to play the current track ?'))
+                                initializeTrack();
+                        }
+
                     }
                 }
             }
@@ -4850,8 +4863,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
     }
 ]);
 
-ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
-    function($filter, angularPlayer) {
+ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer', 'config',
+    function($filter, angularPlayer, config) {
         return {
             restrict: "E",
             link: function(scope, element, attrs) {
@@ -4859,7 +4872,8 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
                 angularPlayer.init();
                 scope.$on('angularPlayer:ready', function(event, data) {
                     scope.$apply(function() {
-                        angularPlayer.onLoadSongs();
+                        if(config.loadSongsOnLoad)
+                            angularPlayer.onLoadSongs();
                     });
                 });
                 scope.$on('track:progress', function(event, data) {
@@ -5257,11 +5271,13 @@ ngSoundManager.directive('playPauseToggle', ['angularPlayer',
     }
 ]);
 
-ngSoundManager.factory('generateIcon', [
-    function() {
+ngSoundManager.factory('generateIcon', ['config',
+    function(config) {
         return {
             get: function(icon) {
-                return '<svg class="icon icon-' + icon + '"><use xlink:href="assets/icons.svg#icon-' + icon + '"></use></svg>';
+                var path = config.svgPath;
+
+                return '<svg class="icon icon-' + icon + '"><use xlink:href="' + path + 'icons.svg#icon-' + icon + '"></use></svg>';
             }
         };
     }

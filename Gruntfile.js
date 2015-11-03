@@ -10,6 +10,7 @@ module.exports = function(grunt) {
           'bower_components/angular/angular.min.js',
           'bower_components/angular-route/angular-route.min.js',
           'bower_components/angular-sanitize/angular-sanitize.min.js',
+          'bower_components/angular-spinner/angular-spinner.js',
           // 'bower_components/angular-soundmanager2/dist/angular-soundmanager2.min.js',
           'app/src/js/lib/angular-soundmanager2.js',
           'app/src/js/app/main.js',
@@ -32,7 +33,7 @@ module.exports = function(grunt) {
           'app/src/js/app/services/prepareFeed.js',
           'app/src/js/app/services/searchFeed.js',
           'app/src/js/app/services/defaultPodcasts.js',
-          'bower_components/angular-spinner/angular-spinner.js'
+          'app/src/js/app/services/confirmOnloadSongCustom.js'
       ]
   };
 
@@ -105,8 +106,8 @@ module.exports = function(grunt) {
     // },
     watch: {
       scripts: {
-        files: ['app/**/*', '!**/dist/**'],
-        tasks: ['jshint', 'concat', 'less']
+        files: ['app/**/*', '!**/dist/**', '!**app/src/css/style.css**'],
+        tasks: ['jshint', 'less', 'concat']
       }
     }
   });

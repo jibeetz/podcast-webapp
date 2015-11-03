@@ -1345,6 +1345,131 @@ p=g("accent-height,accumulate,additive,alphabetic,arabic-form,ascent,baseProfile
 c){g.push("<a ");h.isDefined(b)&&g.push('target="',b,'" ');g.push('href="',a.replace(/"/g,"&quot;"),'">');k(c);g.push("</a>")}if(!c)return c;for(var m,l=c,g=[],n,p;m=l.match(f);)n=m[0],m[2]||m[4]||(n=(m[3]?"http://":"mailto:")+n),p=m.index,k(l.substr(0,p)),e(n,m[0].replace(d,"")),l=l.substring(p+m[0].length);k(l);return a(g.join(""))}}])})(window,window.angular);
 //# sourceMappingURL=angular-sanitize.min.js.map
 
+/**
+ * angular-spinner version 0.7.0
+ * License: MIT.
+ * Copyright (C) 2013, 2014, 2015, Uri Shaked and contributors.
+ */
+
+'format amd';
+
+(function (root) {
+	'use strict';
+
+	function factory(angular, Spinner) {
+
+		return angular
+			.module('angularSpinner', [])
+
+			.constant('SpinJSSpinner', Spinner)
+
+			.provider('usSpinnerConfig', function () {
+				var _config = {};
+
+				return {
+					setDefaults: function (config) {
+						_config = config || _config;
+					},
+					$get: function () {
+						return {
+							config: _config
+						};
+					}
+				};
+			})
+
+			.factory('usSpinnerService', ['$rootScope', function ($rootScope) {
+				var config = {};
+
+				config.spin = function (key) {
+					$rootScope.$broadcast('us-spinner:spin', key);
+				};
+
+				config.stop = function (key) {
+					$rootScope.$broadcast('us-spinner:stop', key);
+				};
+
+				return config;
+			}])
+
+			.directive('usSpinner', ['SpinJSSpinner', 'usSpinnerConfig', function (SpinJSSpinner, usSpinnerConfig) {
+				return {
+					scope: true,
+					link: function (scope, element, attr) {
+						scope.spinner = null;
+
+						scope.key = angular.isDefined(attr.spinnerKey) ? attr.spinnerKey : false;
+
+						scope.startActive = angular.isDefined(attr.spinnerStartActive) ?
+							scope.$eval(attr.spinnerStartActive) : scope.key ?
+							false : true;
+
+						function stopSpinner() {
+							if (scope.spinner) {
+								scope.spinner.stop();
+							}
+						}
+
+						scope.spin = function () {
+							if (scope.spinner) {
+								scope.spinner.spin(element[0]);
+							}
+						};
+
+						scope.stop = function () {
+							scope.startActive = false;
+							stopSpinner();
+						};
+
+						scope.$watch(attr.usSpinner, function (options) {
+							stopSpinner();
+
+							options = options || {};
+							for (var property in usSpinnerConfig.config) {
+								if (options[property] === undefined) {
+									options[property] = usSpinnerConfig.config[property];
+								}
+							}
+
+							scope.spinner = new SpinJSSpinner(options);
+							if (!scope.key || scope.startActive) {
+								scope.spinner.spin(element[0]);
+							}
+						}, true);
+
+						scope.$on('us-spinner:spin', function (event, key) {
+							if (key === scope.key) {
+								scope.spin();
+							}
+						});
+
+						scope.$on('us-spinner:stop', function (event, key) {
+							if (key === scope.key) {
+								scope.stop();
+							}
+						});
+
+						scope.$on('$destroy', function () {
+							scope.stop();
+							scope.spinner = null;
+						});
+					}
+				};
+			}]);
+	}
+
+	if (typeof define === 'function' && define.amd) {
+		/* AMD module */
+		define(['angular', 'spin.js'], factory);
+	} else if (typeof module !== 'undefined' && module && module.exports) {
+		/* CommonJS module */
+		module.exports = factory(require('angular'), require('spin.js'));
+	} else {
+		/* Browser global */
+		factory(root.angular, root.Spinner);
+	}
+}(window || global));
+
 /** @license
  *
  * SoundManager 2: JavaScript Sound for the Web
@@ -5746,10 +5871,14 @@ c){g.push("<a ");h.isDefined(b)&&g.push('target="',b,'" ');g.push('href="',a.rep
 }(window));
 
 var ngSoundManager = angular.module('angularSoundManager', [])
-  .config(['$logProvider', function($logProvider){
+.config(['$logProvider', function($logProvider){
     $logProvider.debugEnabled(false);
-  }]);
+}]);
 
+ngSoundManager.value('config', {
+    'svgPath': '../dist/icons/',
+    'loadSongsOnLoad': true
+});
 
 ngSoundManager.filter('humanTime',
     function () {
@@ -6171,7 +6300,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
             getRewindSecs: function() {
                 return rewindSecs;
             },
-            onLoadSongs: function() {
+            onLoadSongs: function(initializeCustom) {
                 var s = this;
                 if(useLocalStorage && playlist.length > 0){
                     var currentId = null;
@@ -6185,11 +6314,20 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
                     }
 
                     if(currentId){
-                        var r = confirm('Do you want to play the current track ?');
-                        if(r === true)
+
+                        var initializeTrack = function(){
                             $timeout(function(){
                                 s.initPlayTrack(currentId);
                             });
+                        };
+
+                        if(initializeCustom){
+                            initializeCustom(initializeTrack);
+                        }else{
+                            if(confirm('Do you want to play the current track ?'))
+                                initializeTrack();
+                        }
+
                     }
                 }
             }
@@ -6197,8 +6335,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
     }
 ]);
 
-ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
-    function($filter, angularPlayer) {
+ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer', 'config',
+    function($filter, angularPlayer, config) {
         return {
             restrict: "E",
             link: function(scope, element, attrs) {
@@ -6206,7 +6344,8 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer',
                 angularPlayer.init();
                 scope.$on('angularPlayer:ready', function(event, data) {
                     scope.$apply(function() {
-                        angularPlayer.onLoadSongs();
+                        if(config.loadSongsOnLoad)
+                            angularPlayer.onLoadSongs();
                     });
                 });
                 scope.$on('track:progress', function(event, data) {
@@ -6604,11 +6743,13 @@ ngSoundManager.directive('playPauseToggle', ['angularPlayer',
     }
 ]);
 
-ngSoundManager.factory('generateIcon', [
-    function() {
+ngSoundManager.factory('generateIcon', ['config',
+    function(config) {
         return {
             get: function(icon) {
-                return '<svg class="icon icon-' + icon + '"><use xlink:href="assets/icons.svg#icon-' + icon + '"></use></svg>';
+                var path = config.svgPath;
+
+                return '<svg class="icon icon-' + icon + '"><use xlink:href="' + path + 'icons.svg#icon-' + icon + '"></use></svg>';
             }
         };
     }
@@ -6783,6 +6924,18 @@ podcastApp.config(['$routeProvider', function ($routeProvider){
 podcastApp.config(['usSpinnerConfigProvider', function (usSpinnerConfigProvider) {
 	usSpinnerConfigProvider.setDefaults({radius:3, width:2, length: 4, lines: 11, color: '#325671'});
 }]);
+
+podcastApp.constant('configConstant', {
+    'loadSongsOnLoadCustom': true
+});
+
+podcastApp.config(function ($provide) {
+	$provide.decorator('config', function ($delegate) {
+		$delegate.svgPath = 'assets/';
+		$delegate.loadSongsOnLoad = false;
+		return $delegate;
+	});
+});
 podcastApp.directive('svgIcon', ['generateIcon', function(generateIcon) {
 	return {
 		template: function(elem, attr){
@@ -6896,13 +7049,14 @@ podcastControllers.controller('feedsCtrl', ['$scope', '$timeout', '$location', '
 	};
 
 }]);
-podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueShow', 'pageTitle', function ($scope, getUniqueShow, pageTitle){
+podcastControllers.controller('homeCtrl', ['$scope', 'getUniqueShow', 'pageTitle', 'angularPlayer', 'confirmOnloadSongCustom', function ($scope, getUniqueShow, pageTitle, angularPlayer, confirmOnloadSongCustom){
 
 	$scope.$watch('feed.q', function() {
 		if($scope.feed.q){
 			$scope.podcast = getUniqueShow.getItem($scope.feed.q.item, 'latest');
 			pageTitle.setPodcastTitle($scope.feed.q.title);
 			pageTitle.setShowTitle('');
+			angularPlayer.onLoadSongs(confirmOnloadSongCustom.get);
 		}
 	});
 }]);
@@ -7160,11 +7314,13 @@ podcastApp.factory('getUniqueShow', [function(){
 
 			for (var i = 0; i < data.length - 1; i++) {
 
-				if(id == 'latest')
+				if(id == 'latest'){
 					return data[0];
+				}
 
-				if(id == data[i].id)
+				if(id == data[i].id){
 					return data[i];
+				}
 			}
 		}
 	};
@@ -7343,127 +7499,37 @@ podcastApp.factory('defaultPodcasts', ['$q', function($q){
 		get: defaultShows
 	};
 }]);
-/**
- * angular-spinner version 0.7.0
- * License: MIT.
- * Copyright (C) 2013, 2014, 2015, Uri Shaked and contributors.
- */
+podcastApp.factory('confirmOnloadSongCustom', ['configConstant', function(configConstant){
 
-'format amd';
+	var ifOnLoad = true;
 
-(function (root) {
-	'use strict';
+	var checkLoadingOnload = function(){
+		var notificationMarkup = '<div class="notification-box">';
+			notificationMarkup += '<h3>Play the previously playing show ?</h3>';
+			notificationMarkup += '<button class="">Yes</button>';
+			notificationMarkup += '<button class="">No</button>';
+			notificationMarkup += '</div>';
 
-	function factory(angular, Spinner) {
+		$('body').prepend(notificationMarkup);
+		setTimeout(function(){
+			$('.notification-box').addClass('open');
+		}, 50);
 
-		return angular
-			.module('angularSpinner', [])
+		return true;
+	};
 
-			.constant('SpinJSSpinner', Spinner)
+	return {
+		get: function(initTrack) {
+			if(configConstant.loadSongsOnLoadCustom && ifOnLoad){
 
-			.provider('usSpinnerConfig', function () {
-				var _config = {};
-
-				return {
-					setDefaults: function (config) {
-						_config = config || _config;
-					},
-					$get: function () {
-						return {
-							config: _config
-						};
-					}
-				};
-			})
-
-			.factory('usSpinnerService', ['$rootScope', function ($rootScope) {
-				var config = {};
-
-				config.spin = function (key) {
-					$rootScope.$broadcast('us-spinner:spin', key);
-				};
-
-				config.stop = function (key) {
-					$rootScope.$broadcast('us-spinner:stop', key);
-				};
-
-				return config;
-			}])
-
-			.directive('usSpinner', ['SpinJSSpinner', 'usSpinnerConfig', function (SpinJSSpinner, usSpinnerConfig) {
-				return {
-					scope: true,
-					link: function (scope, element, attr) {
-						scope.spinner = null;
-
-						scope.key = angular.isDefined(attr.spinnerKey) ? attr.spinnerKey : false;
-
-						scope.startActive = angular.isDefined(attr.spinnerStartActive) ?
-							scope.$eval(attr.spinnerStartActive) : scope.key ?
-							false : true;
-
-						function stopSpinner() {
-							if (scope.spinner) {
-								scope.spinner.stop();
-							}
-						}
-
-						scope.spin = function () {
-							if (scope.spinner) {
-								scope.spinner.spin(element[0]);
-							}
-						};
-
-						scope.stop = function () {
-							scope.startActive = false;
-							stopSpinner();
-						};
-
-						scope.$watch(attr.usSpinner, function (options) {
-							stopSpinner();
-
-							options = options || {};
-							for (var property in usSpinnerConfig.config) {
-								if (options[property] === undefined) {
-									options[property] = usSpinnerConfig.config[property];
-								}
-							}
-
-							scope.spinner = new SpinJSSpinner(options);
-							if (!scope.key || scope.startActive) {
-								scope.spinner.spin(element[0]);
-							}
-						}, true);
-
-						scope.$on('us-spinner:spin', function (event, key) {
-							if (key === scope.key) {
-								scope.spin();
-							}
-						});
-
-						scope.$on('us-spinner:stop', function (event, key) {
-							if (key === scope.key) {
-								scope.stop();
-							}
-						});
-
-						scope.$on('$destroy', function () {
-							scope.stop();
-							scope.spinner = null;
-						});
-					}
-				};
-			}]);
-	}
-
-	if (typeof define === 'function' && define.amd) {
-		/* AMD module */
-		define(['angular', 'spin.js'], factory);
-	} else if (typeof module !== 'undefined' && module && module.exports) {
-		/* CommonJS module */
-		module.exports = factory(require('angular'), require('spin.js'));
-	} else {
-		/* Browser global */
-		factory(root.angular, root.Spinner);
-	}
-}(window || global));
+				setTimeout(function(){
+					var isLoadingOnload = checkLoadingOnload();
+					if(confirm('Do you want ?'))
+					if(isLoadingOnload)
+						initTrack();
+				}, 200);
+				ifOnLoad = false;
+			}
+		}
+	};
+}]);

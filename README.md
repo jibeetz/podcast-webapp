@@ -54,7 +54,7 @@ Web Podcast player
 - DONE spinner added on loading
 - DONE Play podcast onload
 - Notification system
-- Constant for svg location
+- DONE Constant for svg location
 - Record play location
 - Replace localStorage by firebase
 - Add account
