@@ -4670,9 +4670,10 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
                     return;
                 }
 
+                var currentPosition = 0;
                 for(var i = 0; i < playlist.length; i++){
                     if(playlist[i].id === trackId)
-                        var currentPosition = playlist[i].currentPosition;
+                        currentPosition = playlist[i].currentPosition;
 
                     playlist[i].current = (playlist[i].id === trackId) ? true : false;
                 }
@@ -4898,9 +4899,8 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer', 'config',
                 angularPlayer.init();
                 scope.$on('angularPlayer:ready', function(event, data) {
                     scope.$apply(function() {
-                        if(config.loadSongsOnLoad){
+                        if(config.loadSongsOnLoad)
                             angularPlayer.onLoadSongs();
-                        }
                     });
                 });
                 scope.$on('track:progress', function(event, data) {
@@ -5046,7 +5046,6 @@ ngSoundManager.directive('playMusic', ['angularPlayer',
         return {
             restrict: "EA",
             link: function (scope, element, attrs) {
-
                 element.bind('click', function (event) {
                     angularPlayer.play();
                 });
