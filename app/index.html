@@ -13,11 +13,9 @@
 
 		<header>
 
-			<div id="player" ng-show="feed.q">
+			<div id="player">
 				<ng-include src="'partials/player.html'"></ng-include>
 			</div>
-
-			<div id="no-player" ng-show="!feed.q"></div>
 
 			<div id="input">
 				<ng-include src="'partials/input.html'" ng-controller="feedsCtrl"></ng-include>

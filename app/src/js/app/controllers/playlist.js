@@ -27,19 +27,20 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 
 		podcastsPlaylist.removePodcast(url);
 
+		// If current podcast to be removed
 		if($scope.feed.q && $scope.feed.q.url == url){
+
+			$timeout(function(){
+				angular.forEach($scope.playlist, function(v, k) {
+					if(v.showUrl === url)
+						angularPlayer.removeSong(v.id, k);
+				});
+			});
 
 			delete $scope.feed.q;
 			pageTitle.setPodcastTitle($scope.pageTitleDefault);
 			pageTitle.setShowTitle('');
 
-			if($scope.currentPlaying){
-				$timeout(function(){
-					angularPlayer.stop();
-				});
-
-				$scope.currentPlaying = [];
-			}
 			$location.url('/');
 
 		}

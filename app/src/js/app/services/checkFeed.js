@@ -8,15 +8,7 @@ podcastApp.factory('checkFeedService', [function(){
 
 			var channel = res.data.query.results.rss.channel;
 
-			if(channel.item.length === 0)
-				return;
-
-			var channelSrc = 0;
-			for (var i = 0; i < channel.item.length; i++) {
-				if(channel.item[i].enclosure.url)
-					channelSrc += 1;
-			}
-			if(channelSrc === 0)
+			if(!channel.item)
 				return;
 
 			checkedFeed = {title: channel.title, author: channel.author, url: urlFeed};

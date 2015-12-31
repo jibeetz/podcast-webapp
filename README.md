@@ -24,11 +24,11 @@ Web Podcast player
 
 `npm start`
 
-## Dev
+## Dev mode
 
 `grunt dev`
 
-## Go to prod
+## Production mode
 
 `grunt prod`
 
@@ -53,14 +53,14 @@ Web Podcast player
 - DONE Reload button to check new episodes
 - DONE spinner added on loading
 - DONE Play podcast onload
-- Notification system
+- DONE Notification system
 - DONE Constant for svg location
-- Record play location
+- DONE Record play location
 - Replace localStorage by firebase
 - Add account
 
 ## Credits
 
-[SoundManager2](https://github.com/scottschiller/SoundManager2)
-[angular-soundmanager2](http://perminder-klair.github.io/angular-soundmanager2/)
-[angular-spinner](https://github.com/urish/angular-spinner)
+- [SoundManager2](https://github.com/scottschiller/SoundManager2)
+- [angular-soundmanager2](http://perminder-klair.github.io/angular-soundmanager2/)
+- [angular-spinner](https://github.com/urish/angular-spinner)

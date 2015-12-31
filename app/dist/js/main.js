@@ -5965,6 +5965,13 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
                             //$rootScope.$broadcast('track:id', this.id);
                             //broadcast current playing track progress
                             trackProgress = ((this.position / this.duration) * 100);
+                            for(var i = 0; i < playlist.length; i++){
+                                if(playlist[i].id === currentTrack)
+                                    playlist[i].currentPosition = this.position;
+                            }
+                            if(useLocalStorage)
+                                localStorage.set(playlist);
+
                             $rootScope.$broadcast('track:progress', trackProgress);
                             //broadcast track position
                             $rootScope.$broadcast('currentTrack:position', this.position);
@@ -6116,22 +6123,37 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
                 if(song === currentTrack)
                     $rootScope.$broadcast('player:removeCurrentPlaying');
             },
-            initPlayTrack: function(trackId, isResume) {
+            initPlayTrack: function(trackId, isResume, isOnloadResume, isSongNotTriggered) {
                 if(isResume !== true) {
                     //stop and unload currently playing track
                     this.stop();
                     //set new track as current track
                     this.setCurrentTrack(trackId);
                 }
+                if(isResume && isOnloadResume)
+                    this.setCurrentTrack(trackId);
+
                 //play it
                 soundManager.play(trackId);
                 $rootScope.$broadcast('track:id', trackId);
 
-                for(var i = 0; i < playlist.length; i++)
-                    playlist[i].current = (playlist[i].id === trackId) ? true : false;
+                if(isSongNotTriggered){
+                    this.stop();
+                    return;
+                }
 
+                for(var i = 0; i < playlist.length; i++){
+                    if(playlist[i].id === trackId)
+                        var currentPosition = playlist[i].currentPosition;
+
+                    playlist[i].current = (playlist[i].id === trackId) ? true : false;
+                }
                 if(useLocalStorage)
                     localStorage.set(playlist);
+
+                // Set current position
+                var sound = soundManager.getSoundById(this.getCurrentTrack());
+                sound.setPosition(currentPosition);
 
                 //set as playing
                 isPlaying = true;
@@ -6157,6 +6179,14 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
                 //set as not playing
                 isPlaying = false;
                 $rootScope.$broadcast('music:isPlaying', isPlaying);
+            },
+            resetCurrentPosition: function(){
+                for(var i = 0; i < playlist.length; i++){
+                    if(playlist[i].current === true)
+                        playlist[i].currentPosition = 0;
+                }
+                if(useLocalStorage)
+                    localStorage.set(playlist);
             },
             stop: function() {
                 //first pause it
@@ -6315,19 +6345,15 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$timeout', 'localStorage
 
                     if(currentId){
 
-                        var initializeTrack = function(){
-                            $timeout(function(){
-                                s.initPlayTrack(currentId);
-                            });
-                        };
-
                         if(initializeCustom){
-                            initializeCustom(initializeTrack);
+                            initializeCustom(currentId);
                         }else{
-                            if(confirm('Do you want to play the current track ?'))
-                                initializeTrack();
+                            if(confirm('Do you want to play the previously playing show ?')){
+                                s.initPlayTrack(currentId, true, true);
+                            }else{
+                                s.initPlayTrack(currentId, true, true, true);
+                            }
                         }
-
                     }
                 }
             }
@@ -6344,8 +6370,9 @@ ngSoundManager.directive('soundManager', ['$filter', 'angularPlayer', 'config',
                 angularPlayer.init();
                 scope.$on('angularPlayer:ready', function(event, data) {
                     scope.$apply(function() {
-                        if(config.loadSongsOnLoad)
+                        if(config.loadSongsOnLoad){
                             angularPlayer.onLoadSongs();
+                        }
                     });
                 });
                 scope.$on('track:progress', function(event, data) {
@@ -6520,6 +6547,7 @@ ngSoundManager.directive('stopMusic', ['angularPlayer',
             link: function (scope, element, attrs) {
                 element.bind('click', function (event) {
                     angularPlayer.stop();
+                    angularPlayer.resetCurrentPosition();
                 });
             }
         };
@@ -7112,19 +7140,20 @@ podcastControllers.controller('playlistCtrl', ['$scope', '$location', '$timeout'
 
 		podcastsPlaylist.removePodcast(url);
 
+		// If current podcast to be removed
 		if($scope.feed.q && $scope.feed.q.url == url){
+
+			$timeout(function(){
+				angular.forEach($scope.playlist, function(v, k) {
+					if(v.showUrl === url)
+						angularPlayer.removeSong(v.id, k);
+				});
+			});
 
 			delete $scope.feed.q;
 			pageTitle.setPodcastTitle($scope.pageTitleDefault);
 			pageTitle.setShowTitle('');
 
-			if($scope.currentPlaying){
-				$timeout(function(){
-					angularPlayer.stop();
-				});
-
-				$scope.currentPlaying = [];
-			}
 			$location.url('/');
 
 		}
@@ -7272,15 +7301,7 @@ podcastApp.factory('checkFeedService', [function(){
 
 			var channel = res.data.query.results.rss.channel;
 
-			if(channel.item.length === 0)
-				return;
-
-			var channelSrc = 0;
-			for (var i = 0; i < channel.item.length; i++) {
-				if(channel.item[i].enclosure.url)
-					channelSrc += 1;
-			}
-			if(channelSrc === 0)
+			if(!channel.item)
 				return;
 
 			checkedFeed = {title: channel.title, author: channel.author, url: urlFeed};
@@ -7437,11 +7458,16 @@ podcastApp.factory('prepareFeedService', ['constants', function(constants){
 					}
 				}
 
+				if(!feed.item.length){
+					var tempItem = feed.item;
+					feed.item = [];
+					feed.item.push(tempItem);
+				}
 				angular.forEach(feed.item, function(item, i){
 
+					feed.item[i].showUrl = url;
 					feed.item[i].artist = feed.title;
 					feed.item[i].date = Date.parse(feed.item[i].pubDate);
-
 					feed.item[i].url = feed.item[i].enclosure.url;
 					var podRouteTemp = feed.item[i].url.split('/'),
 						podRoute = podRouteTemp.slice(-1)[0];
@@ -7499,36 +7525,48 @@ podcastApp.factory('defaultPodcasts', ['$q', function($q){
 		get: defaultShows
 	};
 }]);
-podcastApp.factory('confirmOnloadSongCustom', ['configConstant', function(configConstant){
+podcastApp.factory('confirmOnloadSongCustom', ['configConstant', 'angularPlayer', function(configConstant, angularPlayer){
 
-	var ifOnLoad = true;
+	var isEventOnLoad = true;
 
 	var checkLoadingOnload = function(){
 		var notificationMarkup = '<div class="notification-box">';
-			notificationMarkup += '<h3>Play the previously playing show ?</h3>';
-			notificationMarkup += '<button class="">Yes</button>';
-			notificationMarkup += '<button class="">No</button>';
+			notificationMarkup += '<h3>Do you want to play the previously playing show ?</h3>';
+			notificationMarkup += '<button data-action="true">Yes</button>';
+			notificationMarkup += '<button data-action="false">No</button>';
 			notificationMarkup += '</div>';
+			notificationMarkup += '<div class="overlay"></div>';
 
 		$('body').prepend(notificationMarkup);
 		setTimeout(function(){
 			$('.notification-box').addClass('open');
+			$('.overlay').addClass('open');
 		}, 50);
-
-		return true;
 	};
 
 	return {
-		get: function(initTrack) {
-			if(configConstant.loadSongsOnLoadCustom && ifOnLoad){
+		get: function(currentId) {
+			if(configConstant.loadSongsOnLoadCustom && isEventOnLoad){
 
 				setTimeout(function(){
-					var isLoadingOnload = checkLoadingOnload();
-					if(confirm('Do you want ?'))
-					if(isLoadingOnload)
-						initTrack();
+					checkLoadingOnload();
 				}, 200);
-				ifOnLoad = false;
+
+				$(document).on('click', '.notification-box button', function(e){
+					e.preventDefault();
+					var isPlayOnLoad = $(this).attr('data-action');
+
+					if(isPlayOnLoad == 'true'){
+						angularPlayer.initPlayTrack(currentId, true, true);
+					}else{
+						angularPlayer.initPlayTrack(currentId, true, true, true);
+					}
+
+					$('.notification-box').removeClass('open');
+					$('.overlay').removeClass('open');
+				});
+
+				isEventOnLoad = false;
 			}
 		}
 	};

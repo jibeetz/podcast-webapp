@@ -24,11 +24,16 @@ podcastApp.factory('prepareFeedService', ['constants', function(constants){
 					}
 				}
 
+				if(!feed.item.length){
+					var tempItem = feed.item;
+					feed.item = [];
+					feed.item.push(tempItem);
+				}
 				angular.forEach(feed.item, function(item, i){
 
+					feed.item[i].showUrl = url;
 					feed.item[i].artist = feed.title;
 					feed.item[i].date = Date.parse(feed.item[i].pubDate);
-
 					feed.item[i].url = feed.item[i].enclosure.url;
 					var podRouteTemp = feed.item[i].url.split('/'),
 						podRoute = podRouteTemp.slice(-1)[0];
