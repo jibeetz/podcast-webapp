@@ -188,6 +188,14 @@ section::-webkit-scrollbar-thumb,
   background-color: rgba(186, 219, 236, 0.5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+  display: none !important;
+}
 * {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
