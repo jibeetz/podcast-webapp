@@ -14,3 +14,17 @@
 		<div class="checked-author">{{checkedFeed.author}}</div>
 	</div>
 </div>
+
+<ul ng-show="!addRss.b">
+	<li ng-repeat="podcastItem in podcastsList | currentOnTop:'current'">
+		<span class="current-podcast-text" ng-show="podcastItem.current" ng-bind-html="currentPodcastText"></span>
+		<a href="" ng-click="playFeed(podcastItem.url);" ng-class="{active: podcastItem.current}">{{podcastItem.title}}</a>
+		<button class="remove-podcast" ng-click="removeFeedFromList(podcastItem.url)">
+			<div svg-icon="close"></div>
+		</button>
+		<button class="update-podcast" ng-click="playFeed(podcastItem.url, true)" ng-show="podcastItem.current">
+			<div svg-icon="loop"></div>
+		</button>
+	</li>
+	<li ng-show="!podcastsList.length">no shows added</li>
+</ul>

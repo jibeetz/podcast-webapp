@@ -25,9 +25,8 @@
 		<meta name="theme-color" content="#ffffff">
 
 		<link href="dist/css/style.css" rel="stylesheet" type="text/css">
-		<script src="dist/js/main.js"></script>
 	</head>
-	<body>
+	<body class="ng-cloak">
 		<sound-manager></sound-manager>
 
 		<header>
@@ -37,8 +36,7 @@
 			</div>
 
 			<div id="input">
-				<ng-include src="'partials/input.html'" ng-controller="feedsCtrl"></ng-include>
-				<ng-include src="'partials/playlist.html'" ng-controller="playlistCtrl"></ng-include>
+				<ng-include src="'partials/input.html'"></ng-include>
 			</div>
 
 		</header>
@@ -56,6 +54,9 @@
 			<aside ng-show="feed.q">
 				<ng-include src="'partials/list.html'"></ng-include>
 			</aside>
+
 		</div>
+
+		<script src="dist/js/main.js"></script>
 	</body>
 </html>
