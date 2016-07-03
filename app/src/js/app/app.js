@@ -22,7 +22,7 @@ podcastApp.config(['usSpinnerConfigProvider', function (usSpinnerConfigProvider)
 }]);
 
 podcastApp.constant('configConstant', {
-    'loadSongsOnLoadCustom': true
+    'loadSongsOnLoadCustom': false
 });
 
 podcastApp.config(function ($provide) {

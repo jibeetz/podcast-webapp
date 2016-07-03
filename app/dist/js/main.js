@@ -6953,7 +6953,7 @@ podcastApp.config(['usSpinnerConfigProvider', function (usSpinnerConfigProvider)
 }]);
 
 podcastApp.constant('configConstant', {
-    'loadSongsOnLoadCustom': true
+    'loadSongsOnLoadCustom': false
 });
 
 podcastApp.config(function ($provide) {
@@ -7526,7 +7526,7 @@ podcastApp.factory('confirmOnloadSongCustom', ['configConstant', 'angularPlayer'
 
 	var checkLoadingOnload = function(){
 		var notificationMarkup = '<div class="notification-box">';
-			notificationMarkup += '<h3>Do you want to play the previously playing show ?</h3>';
+			notificationMarkup += '<h3>Do you want to resume your last show?</h3>';
 			notificationMarkup += '<button data-action="true">Yes</button>';
 			notificationMarkup += '<button data-action="false">No</button>';
 			notificationMarkup += '</div>';
