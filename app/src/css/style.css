@@ -5,8 +5,8 @@
   line-height: 1.3em;
 }
 .card {
-  background-color: #ffffff;
-  border: 1px solid #ececec;
+  background-color: #fff;
+  border: 1px solid #ECECEC;
   padding: 10px;
   border-radius: 2px;
   margin: 15px;
@@ -72,7 +72,7 @@ p {
   padding: 0;
 }
 body {
-  background: #eaeff1;
+  background: #EAEFF1;
   font-family: 'Roboto Condensed', sans-serif;
   color: #5F5F5F;
 }
@@ -81,7 +81,7 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: #add4ea;
+  color: #ADD4EA;
 }
 li {
   list-style: none;
@@ -102,8 +102,8 @@ button svg {
 section {
   float: right;
   width: calc(75% - 45px);
-  background-color: #ffffff;
-  border: 1px solid #ececec;
+  background-color: #fff;
+  border: 1px solid #ECECEC;
   padding: 10px;
   border-radius: 2px;
   margin: 15px;
@@ -139,7 +139,7 @@ h3 {
   font-size: 1em;
   width: 300px;
   border: none;
-  background-color: #eaeff1;
+  background-color: #EAEFF1;
 }
 a.clear-search {
   background: #48598E;
@@ -163,7 +163,7 @@ a.clear-search:hover {
   margin: 0;
   font-size: 0.9em;
   padding-bottom: 15px;
-  border-bottom: 1px solid #ececec;
+  border-bottom: 1px solid #ECECEC;
   margin-bottom: 15px;
 }
 #search-results > ul > li li,
@@ -204,7 +204,7 @@ a.clear-search:hover {
   padding: 10px 0;
   margin-top: 10px;
   width: 100%;
-  border-top: 1px solid #ececec;
+  border-top: 1px solid #ECECEC;
 }
 #details img {
   max-width: 100%;
@@ -226,15 +226,15 @@ a.clear-search:hover {
   float: right;
   width: 150px;
   margin: 0 0 10px 15px;
-  border: 1px solid #ececec;
+  border: 1px solid #ECECEC;
 }
 /* List */
 aside {
   width: 25%;
   overflow: scroll;
   font-size: 0.8em;
-  background-color: #ffffff;
-  border: 1px solid #ececec;
+  background-color: #fff;
+  border: 1px solid #ECECEC;
   padding: 10px;
   border-radius: 2px;
   margin: 15px;
@@ -247,14 +247,14 @@ aside li {
 aside li a {
   display: block;
   padding: 5px;
-  border-bottom: 1px solid #ececec;
+  border-bottom: 1px solid #ECECEC;
   background: #FFF;
   padding-right: 30px;
   line-height: 1.4;
   min-height: 60px;
 }
 #list li a.active {
-  color: #add4ea;
+  color: #ADD4EA;
 }
 #list li:last-child a {
   border-bottom: none;
@@ -270,11 +270,11 @@ aside .date {
   height: 23px;
   text-align: center;
   border: none;
-  background: #eaeff1;
+  background: #EAEFF1;
 }
 .add-song:hover,
 .play-song:hover {
-  background: #add4ea;
+  background: #ADD4EA;
 }
 .play-song {
   top: 5px;
@@ -343,13 +343,13 @@ header > div {
 .volume button svg:hover,
 #input ul li .icon:hover,
 .playlist .icon:hover {
-  fill: #add4ea;
-  color: #add4ea;
+  fill: #ADD4EA;
+  color: #ADD4EA;
 }
 .btn-rewind:hover span,
 .btn-rewind:hover svg {
-  fill: #add4ea;
-  color: #add4ea;
+  fill: #ADD4EA;
+  color: #ADD4EA;
 }
 .controls button {
   border: none;
@@ -361,7 +361,7 @@ header > div {
   cursor: default;
 }
 .controls button.active svg {
-  fill: #95c3d6;
+  fill: #95C3D6;
 }
 .volume {
   position: absolute;
@@ -390,7 +390,7 @@ header > div {
   width: calc(100% - 65px);
   height: 5px;
   vertical-align: middle;
-  background-color: #95c3d6;
+  background-color: #95C3D6;
   margin-right: 5px;
   cursor: pointer;
   margin-top: 5px;
@@ -401,11 +401,11 @@ header > div {
   background: #0F5471;
 }
 .volume-bar.active {
-  background: #eaeff1;
+  background: #EAEFF1;
   cursor: default;
 }
 .volume-bar.active .volume-bar-playing {
-  background: #95c3d6;
+  background: #95C3D6;
 }
 .current-title {
   font-size: 0.9em;
@@ -433,7 +433,7 @@ header > div {
   font-size: 0.7em;
   height: 7px;
   width: calc(100% - 90px);
-  background: #eaeff1;
+  background: #EAEFF1;
   margin-top: 4px;
   position: relative;
 }
@@ -446,7 +446,7 @@ header > div {
 }
 .seekLoaded {
   height: 7px;
-  background: #95c3d6;
+  background: #95C3D6;
   position: absolute;
   top: 0;
   left: 0;
@@ -528,7 +528,7 @@ a.remove-from-playlist svg {
   padding: 8px 20px;
 }
 .details-actions button:hover {
-  background: #add4ea;
+  background: #ADD4EA;
 }
 .details-actions button svg {
   fill: white;
@@ -550,14 +550,14 @@ a.remove-from-playlist svg {
   position: relative;
   z-index: 1;
   padding-top: 5px;
-  background: #ffffff;
+  background: #fff;
 }
 #input form {
   padding: 5px 10px;
 }
 #input ul {
   padding: 0px 0 0 15px;
-  background: #ffffff;
+  background: #fff;
   margin-right: 5px;
   height: 85px;
   overflow-y: scroll;
@@ -598,7 +598,7 @@ a.remove-from-playlist svg {
   width: 10px;
   height: 10px;
   margin-top: 2px;
-  fill: #eaeff1;
+  fill: #EAEFF1;
 }
 #input ul li .icon.icon-play {
   fill: #325671;
@@ -606,7 +606,7 @@ a.remove-from-playlist svg {
 #input input[type="text"],
 #input input[type="submit"] {
   padding: 5px;
-  background: #eaeff1;
+  background: #EAEFF1;
 }
 #input input[type="text"] {
   width: 73%;
