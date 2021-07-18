@@ -1,6 +1,8 @@
 # podcast-webapp
 Web Podcast player
 
+**Note: To fetch the RSS feeds, the app relied on a yahoo service which is not available anymore.**
+
 # Features
 - Plays Podcasts; just add the rss feed of your podcast
 - List shows and their details
@@ -23,6 +25,8 @@ Web Podcast player
 ## Start
 
 `npm start`
+
+Visit http://localhost:1337/app/
 
 ## Dev mode
 
